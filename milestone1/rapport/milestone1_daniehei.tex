@@ -17,7 +17,8 @@
 \usepackage{hyperref}
 \usepackage{titling}
 \usepackage{marvosym }
-\usepackage{subcaption}
+%\usepackage{subcaption}
+\usepackage{subfig}
 \usepackage[noabbrev]{cleveref}
 \usepackage{cite}
 
@@ -109,6 +110,14 @@ We want to know $\eta$ at all possible time, not just the ones used here. Thus w
 
 \section{Results}
 
+
+\begin{figure}[ht]
+     \centering
+     \subfloat[][This shows the Hubble Parameter as a function of the logarithmic scale factor $x$.]{\includegraphics[scale=0.4]{H.png}\label{fig:H}}
+     \subfloat[][This shows the Hubble Parameter as a function red shift $z$]{\includegraphics[scale=0.4]{H_z.png}\label{fig:H_z}}
+     \caption{These plots show the evolution of the Hubble parameter through the life time of the Universe.}
+     \label{fig:Hs}
+\end{figure}
 
 
 

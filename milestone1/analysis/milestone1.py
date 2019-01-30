@@ -27,6 +27,7 @@ if __name__ == "__main__":
         
 
     output_path = "../output/"
+    rapport_path = "../rapport/"
 
     """
     Reads and plots the density fractions
@@ -46,7 +47,7 @@ if __name__ == "__main__":
     plt.xlabel("Logarithmic Scale Factor")
     plt.ylabel("Density Parameter")
     plt.title("The Evolution of the Density Parameterss")
-    plt.savefig(output_path+"Omega.png")
+    plt.savefig(rapport_path+"Omega.png")
     plt.show()
 
 
@@ -61,8 +62,8 @@ if __name__ == "__main__":
     plt.xlim(x[0],x[-1])
     plt.xlabel("Logarithmic Scale Factor")
     plt.ylabel("H")
-    plt.title("The Evolution of the Hubble Parameters H through the Life Time of the Universe")
-    plt.savefig(output_path+"H.png")
+    plt.title("The Evolution of the Hubble Parameters H(x)")
+    plt.savefig(rapport_path+"H.png")
     plt.show()
 
     plt.plot(z,H_z)
@@ -72,8 +73,8 @@ if __name__ == "__main__":
 
     plt.xlabel("Red Shift")
     plt.ylabel("H")
-    plt.title("The Evolution of the Hubble Parameters H through the Life Time of the Universe")
-    plt.savefig(output_path+"H_z.png")
+    plt.title("The Evolution of the Hubble Parameters H(z)")
+    plt.savefig(rapport_path+"H_z.png")
     plt.show()
 
 
@@ -88,5 +89,5 @@ if __name__ == "__main__":
     plt.xlabel("Logarithmic Scale Factor")
     plt.ylabel(r"$\eta$")
     plt.title(r"The Conformal Time $\eta$")
-    plt.savefig(output_path+"eta.png")
+    plt.savefig(rapport_path+"eta.png")
     plt.show()
