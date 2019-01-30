@@ -85,14 +85,29 @@ It can be shown that we can rewrite this in another variable
 \frac{d \eta}{da} = \frac{c}{a\mathcal{H}}.
 \end{equation}
 Since we have introduces the time parameter $x$, we can rewrite this again
-\begin{equation}
+\begin{equation}\label{eq:deta/dx}
 \frac{d\eta}{da} = \frac{d\eta}{dx}\frac{dx}{da} = \frac{d\eta}{dx}\frac{d \ln a}{da} = \frac{d\eta}{dx}\frac{1}{a} \Rightarrow \frac{d\eta}{dx} = \frac{c}{a\mathcal{H}}\cdot a = \frac{c}{\mathcal{H}}.
 \end{equation}
 This makes it easy to integrate to find $\eta$.
 
 \section{Method}
 
+We are going to calculate \eqref{eq:Friedmann} by saying that we are going to look at the universe from the start of the recombination, $z = 1630.4$, to the end of recombination, $z = 614.2$, and from this to today, $z = 0$. We are then going to convert these red shifts into the logarithmic scale factor, and make a grid with $200$ points during recombination and $300$ points after. With this grid we can calculate $H$ from \eqref{eq:Friedmann}.
 
+To find the the conformal time $\eta$ we need a new grid. This time we start with a grid from $a=10^{-10}$ to $a=1$ (today), with 1000 points. To be able to integrate \eqref{eq:deta/dx} we need initial condition for $\eta$ at the start of recombination. We can do this be noting that $a\mathcal{H}(a) \rightarrow H_0\sqrt{\Omega_r}$ as $a\rightarrow 0$\emph{Cite Callin}. This means that we can make the integral from the start of time, to recombination
+
+\begin{equation}
+\eta(a=a_{recombination}) = \int_0^{a_{recombination}} \frac{c}{a\mathcal{H}}da \approx \int_0^{a_{recombination}} \frac{c}{H_0\sqrt{\Omega_r}}da = \frac{c\cdot a_{recombination}}{H_0\sqrt{\Omega_r}}.
+\end{equation}
+
+Thus we have an initial value for $\eta$. To integrate until today, we can just use a simple Euler scheme
+\begin{equation}
+\eta_{i+1} = \eta_i + \frac{d\eta}{dx}\cdot dx.
+\end{equation}
+
+We want to know $\eta$ at all possible time, not just the ones used here. Thus we use a \textit{spline} on the calculated dataset to find get a continuous approximation to $\eta$.
+
+\section{Results}
 
 
 
