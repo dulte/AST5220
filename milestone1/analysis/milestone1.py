@@ -13,11 +13,11 @@ def read_file(name):
     with open(name) as f:
         for line in f.readlines():
             words = line.split()
-            x.append(float(words[0]))
-            y.append(float(words[1]))
+            x.append(words[0])
+            y.append(words[1])
             
 
-    return x, y
+    return np.array(x,dtype=np.float), np.array(y,dtype=np.float)
 
 
 
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     plt.plot(x,omega_m,label=r"$\Omega_{m}$")
     plt.plot(x,omega_L,label=r"$\Omega_{\Lambda}$")
     plt.xlim(x[0],x[-1])
-    plt.legend()
+    plt.legend(loc="best")
     plt.xlabel("Logarithmic Scale Factor")
     plt.ylabel("Density Parameter")
     plt.title("The Evolution of the Density Parameterss")
@@ -58,7 +58,8 @@ if __name__ == "__main__":
     x, H_x = read_file(output_path + "H.dat")
     z, H_z = read_file(output_path + "H_z.dat")
 
-    plt.plot(x,H_x)
+
+    plt.semilogy(x,H_x)
     plt.xlim(x[0],x[-1])
     plt.xlabel("Logarithmic Scale Factor")
     plt.ylabel("H")
@@ -83,7 +84,7 @@ if __name__ == "__main__":
     """
 
     x, eta = read_file(output_path + "eta.dat")
-
+  
     plt.semilogy(x,eta)
     plt.xlim(x[0],x[-1])
     plt.xlabel("Logarithmic Scale Factor")
@@ -91,3 +92,4 @@ if __name__ == "__main__":
     plt.title(r"The Conformal Time $\eta$")
     plt.savefig(rapport_path+"eta.png")
     plt.show()
+    

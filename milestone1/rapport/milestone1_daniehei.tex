@@ -21,6 +21,7 @@
 \usepackage{subfig}
 \usepackage[noabbrev]{cleveref}
 \usepackage{cite}
+\usepackage{todonotes}
 
 
 \setlength{\droptitle}{-10em}   % This is your set screw
@@ -48,7 +49,7 @@
 \section{Introduction}
 During the next four milestones we are going to calculate the temperature of the photons of the \textit{Comic Microwave Background} \footnote{Or to be more precise, the power spectrum of the CMB}. There are many hurdles to overcome on this journey, but the first is the expansion of the space-time in which the photons exist.
 
-The photons we are looking at lives in the same Universe as we do, and from theoretical predictions and observations we know that this Universe is expanding, and has been doing so from the start time, thought the decoupling for matter and photons and all the way to today. As the space and time the photons occupy is expanding the photons will redshift. Heuristically this is because the photons dissipates energy to overcome this expansion \emph{Look over and rewrite}. This loss of energy leads to a decrease in the photon energy and therefore a change in the wavelength towards the redder part of the spectrum \footnote{In other words longer wavelength.}. 
+The photons we are looking at lives in the same Universe as we do, and from theoretical predictions and observations we know that this Universe is expanding, and has been doing so from the start time, thought the decoupling for matter and photons and all the way to today. As the space and time the photons occupy is expanding the photons will redshift. Heuristically this is because the photons dissipates energy to overcome this expansion \todo{Look over and rewrite this explanation}. This loss of energy leads to a decrease in the photon energy and therefore a change in the wavelength towards the redder part of the spectrum \footnote{In other words longer wavelength.}. 
 We need a way of quantifying this expansion, to be ables to calculate this change in temperature. We are going to do this by solving the \textit{Friedmann equation}\eqref{eq:Friedmann} to get the Hubble parameter
 \begin{equation}\label{eq:H}
 H = \frac{a}{\dot{a}},
@@ -108,6 +109,17 @@ Thus we have an initial value for $\eta$. To integrate until today, we can just 
 
 We want to know $\eta$ at all possible time, not just the ones used here. Thus we use a \textit{spline} on the calculated dataset to find get a continuous approximation to $\eta$.
 
+We also want to find an expression for $d\mathcal{H}/dx$. This is simply done with our definition of $\mathcal{H}$ and $H$
+
+\begin{equation*}
+\frac{d\mathcal{H}}{dx} = \frac{d}{dx}e^x H = e^x \left( H + \frac{dH}{dx}\right) = e^x \left( H + \frac{d}{dx}\left[H_0 \sqrt{(\Omega_{b,0} + \Omega_{m,0})\exp(-3x) + (\Omega_{r,0} + \Omega_{\nu,0})\exp(-4x) + \Omega_{\Lambda,0}}   \right]\right) 
+\end{equation*}
+\begin{equation}
+= e^x\left(H + \frac{H_0^2}{H}\left[-3(\Omega_{b,0} + \Omega_{m,0})\exp(-3x) -4 (\Omega_{r,0} + \Omega_{\nu,0})\exp(-4x)\right] \right)
+\end{equation}
+
+\newpage
+
 \section{Results}
 
 
@@ -115,12 +127,42 @@ We want to know $\eta$ at all possible time, not just the ones used here. Thus w
      \centering
      \subfloat[][This shows the Hubble Parameter as a function of the logarithmic scale factor $x$.]{\includegraphics[scale=0.4]{H.png}\label{fig:H}}
      \subfloat[][This shows the Hubble Parameter as a function red shift $z$]{\includegraphics[scale=0.4]{H_z.png}\label{fig:H_z}}
-     \caption{These plots show the evolution of the Hubble parameter through the life time of the Universe.}
+     \caption{These plots show the evolution of the Hubble parameter through the lifetime of the Universe. Notice that for \ref{fig:H} the y-axis is logged, due to the x-axis being a logarithmic variable, which makes $H$ close to $0$ for $x$ all values except for those to the around $-20$ and below. Since \ref{fig:H_z} isn't plotted against a logarithmic variable, no logging of the y-axis is required. This unfortunately makes a direct comparison between the plots less trivial.}
      \label{fig:Hs}
+     \todo[inline]{Maybe rewrite the explanation of the logarithmic y-axis in fig:Hs}
 \end{figure}
 
 
 
+In fig. \ref{fig:Hs} we see the evolution of the Hubble parameter. From \eqref{eq:H} we see that $H$ is proportional to $a$ and inversely proportional to $\dot{a}$. This means that in the early Universe, where $\dot{a}$ is small, the expansion of the Universe $\dot{a}$ was even smaller. In the late Universe, where $a = a_0 = 1$, the expansion rate must be very large, so that $H \approx 0$. \todo{Not completely sure of this, so double check the reasoning and results}
+
+
+\begin{figure}[ht]
+     \centering
+	{\includegraphics[scale=0.5]{Omega.png}
+	\caption{Here we see the evolution of the four density fractions of the Universe. $\Omega_r$ is the density fraction for \textit{radiation}, $\Omega_b$ for \textit{baryons}, $\Omega_b$ for \textit{dark matter}, and $\Omega_{\Lambda}$ for \textit{dark energy}.}\label{fig:omega}}
+\end{figure}
+
+
+Fig. \ref{fig:omega} shows the evolution of the density fraction. From \ref{eq:rho} we see that the different densities have different dependencies on the scale factor $a$. These dependencies also extends to the density fractions \ref{eq:Omega}. Since radiation is dependent on $a^{-4}$, we expect that to be dominant in the early Universe with $a << 1$. This is what we see from fig. \ref{fig:omega}. At some point matter (baryons and dark matter) will be more dominant than due to the fact that $\Omega_{r,0} \approx 10^{-6}$, so even though its dependence on $a^{-4}$ makes it larger that matter which has a dependence on $a^{-3}$ if $a<1$ this only holds as long as $a < 10^{-6}$, so around this point matter starts to dominate (dark matter in this case, since $\Omega_{b,0}$ is only $0.046$). \todo{Can maybe be explained easier...} This is also what we see from the plot. At present time, when $a=1$, we expect that $\Omega_{x,0}$ is the determiner of the values of the densities, which we can see is correct from the figure.
+
+
+\begin{figure}[H]
+     \centering
+	{\includegraphics[scale=0.5]{eta.png}
+	\caption{Here we can see the conformal time $\eta$ through the lifetime of the Universe. The slope of this plot is determined by the type of energy that dominates the Universe. This will be described more in the text. }\label{fig:eta}}
+	\todo[inline]{Rewrite eta caption!}
+\end{figure}
+
+
+Fig. \ref{fig:eta} shows the main result of this article. We can try to explain and justify the plot shown in \ref{fig:eta} from what we know about cosmology. We see that the plot seems to be three (more or less) linear functions (which means power law before taking the logarithm) sewn together. This is because the slope of the function goes as $1/aH$ \footnote{This is the derivative of $\eta$}, and since $H$ and $a$ goes as power laws when dominated by radiation or matter, and a exponential when dominated by dark energy in the very late Universe. So if we compare fig. \ref{fig:omega} and fig. \ref{fig:eta} we see that when radiation dominates the density parameters we have a step slope of $\log \eta$, but when matter starts to dominate in \ref{fig:omega}, the slope in \ref{fig:eta} becomes less step. During the late Universe dark matter starts to dominate, and in the very last part of the plot of $\eta$, we can see that the slope starts to become even less step. \todo{Look through this explanation!}
+
+
+\section{Conclusion}
+
+Our main result, shown in fig. \ref{fig:eta}, gave us a way of finding a value for the conformal time $\eta$ for a given logarithmic scale factor $x = \log(a)$. We used calculations of the density parameters, fig. \ref{fig:omega}, to see that our model looked like what we expect from out Universe. 
+
+We also made functions to be able to get values for the Hubble parameter, fig. \ref{fig:Hs}, and for $\mathcal{H}$ and $\frac{d\mathcal{H}}{dx}$, which are not shown in this article.
 
 
 \end{document}
