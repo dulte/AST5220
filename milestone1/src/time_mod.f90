@@ -83,7 +83,7 @@ contains
 
 
     ! Solving the differential equation to find eta. 
-    ! This used the odesover from Numerical Recipies, with a Runge Kutta (qs) integrator.
+    ! This used the odesover from Numerical Recipes, with a Runge Kutta (qs) integrator.
     do i = 2, n_eta
       eta(i) = eta(i-1)
       call odeint(eta(i:i), x_eta(i-1), x_eta(i), 1.d-7, 1.d-2, 1.d-10, derivs, rkqs, output) 
