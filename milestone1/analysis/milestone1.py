@@ -44,7 +44,7 @@ if __name__ == "__main__":
     plt.plot(x,omega_L,label=r"$\Omega_{\Lambda}$")
     plt.xlim(x[0],x[-1])
     plt.legend(loc="best")
-    plt.xlabel("Logarithmic Scale Factor")
+    plt.xlabel(r"Logarithmic Scale Factor $x$")
     plt.ylabel("Density Parameter")
     plt.title("The Evolution of the Density Parameterss")
     plt.savefig(rapport_path+"Omega.png")
@@ -59,10 +59,10 @@ if __name__ == "__main__":
     z, H_z = read_file(output_path + "H_z.dat")
 
 
-    plt.semilogy(x,H_x)
+    plt.plot(x,np.log(H_x))
     plt.xlim(x[0],x[-1])
-    plt.xlabel("Logarithmic Scale Factor")
-    plt.ylabel("H")
+    plt.xlabel(r"Logarithmic Scale Factor $x$")
+    plt.ylabel(r"$\log H$ ")
     plt.title("The Evolution of the Hubble Parameters H(x)")
     plt.savefig(rapport_path+"H.png")
     plt.show()
@@ -73,7 +73,7 @@ if __name__ == "__main__":
     ax.invert_xaxis()
 
     plt.xlabel("Red Shift")
-    plt.ylabel("H")
+    plt.ylabel(r"H $[s^{-1}]$")
     plt.title("The Evolution of the Hubble Parameters H(z)")
     plt.savefig(rapport_path+"H_z.png")
     plt.show()
@@ -85,11 +85,29 @@ if __name__ == "__main__":
 
     x, eta = read_file(output_path + "eta.dat")
   
-    plt.semilogy(x,eta)
+    plt.plot(x,np.log(eta))
     plt.xlim(x[0],x[-1])
-    plt.xlabel("Logarithmic Scale Factor")
-    plt.ylabel(r"$\eta$")
+    plt.xlabel(r"Logarithmic Scale Factor $x$")
+    plt.ylabel(r"$\log \eta$")
     plt.title(r"The Conformal Time $\eta$")
     plt.savefig(rapport_path+"eta.png")
     plt.show()
+
+
+    """
+    Finds the slope of the logged eta to see if it holds
+    up to the theory
+    """
+
+    rad_dominated = eta[x<-18]#[np.logical_and(x<-3,x>-5)]
+    rad_x = x[x<-18]#[np.logical_and(x<-3,x>-5)]
+    log_rad = np.log(rad_dominated)
+
+    print("Slope for radiation dominated logged Universe:")
+    print((log_rad[-1]-log_rad[3])/(rad_x[-1]-rad_x[3]))
+
+
+
+
+
     
