@@ -54,7 +54,7 @@ We need a way of quantifying this expansion, to be ables to calculate this chang
 \begin{equation}\label{eq:H}
 H = \frac{\dot{a}}{a},
 \end{equation}
-where $a$ is the scale factor and $\dot{a}$ its time derivative. The Hubble parameters is an observable quantity which describes the expansion of the Universe. From this we are going to calculate the \textit{conformal time} $\eta$, which is a convenient way of representing time in many of the equations we are going to solve in later milestones. The physical interpretation of $\eta$ is that given that the expansion of the Universe is frozen, $\eta$ is the time it takes light to travel from us to the outer limit of the observable universe. This means that for a given time, $\eta$  gives the proper distance to the particle horizon with the relation $d_{part. hor.} = c\eta$.
+where $a$ is the scale factor and $\dot{a}$ its time derivative. The Hubble parameters is an observable quantity which describes the expansion of the Universe. From this we are going to calculate the \textit{conformal time} $\eta$, which is a convenient way of representing time in many of the equations we are going to solve in later milestones. The physical interpretation of $\eta$ the distance a photon emitted at the Big Bang has traveled\footnote{This is a theoretical photon which haven't interacted with anything.}. 
 
 
 \section{Theory}
@@ -68,7 +68,7 @@ H = H_0 \sqrt{(\Omega_{b,0} + \Omega_{m,0})a^{-3} + (\Omega_{r,0} + \Omega_{\nu,
 
 where $\Omega_{b,0}, \Omega_{m,0}, \Omega_{r,0}, \Omega_{\nu,0}, \Omega_{\Lambda,0}$ are the \textit{density parameters} for respectively baryons, (cold) dark matter, neutrinos and dark energy. These parameters are given as
 \begin{equation}\label{eq:Omega}
-\Omega_{x,0} = \frac{\rho_{x,0}}{\rho_{crit,0}} = \rho_{crit,0}\cdot\left[\frac{3H_0^2}{8\pi G}\right]^{-1},
+\Omega_{x,0} = \frac{\rho_{x,0}}{\rho_{crit,0}} = \rho_{x,0}\cdot\left[\frac{3H_0^2}{8\pi G}\right]^{-1},
 \end{equation}
 
 where $\rho_{x,0}$ is the density and $\rho_{crit,0} = \frac{3H_0^2}{8\pi G}$ is the critical density. Notice that the subscript $0$ means that these are the parameters at present time. If we instead calculate the density and the critical density at a given time, we obtain the density parameter at this time as well. We are going to assume that there are no neutrinos, and set $\Omega_{nu} = 0$ for all times.
@@ -139,14 +139,14 @@ where $k$ is the exponent associated with each component of the Universe.
      \centering
      \subfloat[][This shows the Hubble Parameter as a function of the logarithmic scale factor $x$.]{\includegraphics[scale=0.4]{H.png}\label{fig:H}}
      \subfloat[][This shows the Hubble Parameter as a function red shift $z$]{\includegraphics[scale=0.4]{H_z.png}\label{fig:H_z}}
-     \caption{These plots show the evolution of the Hubble parameter through the lifetime of the Universe. Notice that for \ref{fig:H} both axes are logged with the natural logarithm. Since \ref{fig:H_z} isn't plotted with a logarithmic variable, no logging of the y-axis is required. This unfortunately makes a direct comparison between the plots less trivial.}
+     \caption{These plots show the evolution of the Hubble parameter through the lifetime of the Universe. Notice that for \ref{fig:H} both axes are logged with the natural logarithm. Since \ref{fig:H_z} isn't plotted with a logarithmic variable, no logarithm on the y-axis is required. This unfortunately makes a direct comparison between the plots less trivial.}
      \label{fig:Hs}
   
 \end{figure}
 
 
 
-In fig. \ref{fig:Hs} we see the Hubble parameter as a function of the scale factor and red shift. From fig. \ref{fig:H} we see three different epochs, with different slopes. If we look at fig. \ref{fig:omega} we see that these different epochs corresponds domination of the different constituents. If we look at radiation- and matter dominated epochs we know that the Hubble parameters should be $H_{rad} \propto a^{-2}$ and $H_{matter} \propto a^{-3/2}$. This is the same as we see in first two epochs in fig. \ref{fig:H} -- approximately $x < -10$ and $-7<x<-2$--. This indicates that our Hubble parameter is correctly calculated.
+In fig. \ref{fig:Hs} we see the Hubble parameter as a function of the scale factor and red shift. From fig. \ref{fig:H} we see three different epochs, with different slopes. If we look at fig. \ref{fig:omega} we see that these different epochs corresponds domination of the different constituents -- radiation, matter and dark energy --. If we look at radiation- and matter dominated epochs we know that the Hubble parameters should be $H_{rad} \propto a^{-2}$ and $H_{matter} \propto a^{-3/2}$. This is the same as we see in first two epochs in fig. \ref{fig:H} -- approximately $x < -10$ and $-7<x<-2$--. This indicates that our Hubble parameter is correctly calculated.
 
 
 \begin{figure}[ht]
@@ -157,8 +157,10 @@ In fig. \ref{fig:Hs} we see the Hubble parameter as a function of the scale fact
 
 
 
-Fig. \ref{fig:omega} shows the evolution of the density fraction. From \ref{eq:rho} we see that the different densities have different dependencies on the scale factor $a$. These dependencies also extends to the density fractions \ref{eq:Omega}. Since radiation is dependent on $a^{-4}$, we expect that to be dominant in the early Universe with $a << 1$. This is what we see from fig. \ref{fig:omega}. At some point matter (baryons and dark matter) will be more dominant than radiation due to the fact that $\Omega_{r,0} \approx 10^{-6}$, so even though its dependence on $a^{-4}$ makes it larger that matter( which has a dependence on $a^{-3}$) if $a<1$, this only holds as long as $a < 10^{-6}$, so around this point matter starts to dominate (dark matter in this case, since $\Omega_{b,0}$ is only $0.046$). This is also what we see from the plot. At present time, when $a=1$, we expect that $\Omega_{x,0}$ is the determiner of the values of the densities, which we can see is correct from the figure.
+Fig. \ref{fig:omega} shows the evolution of the density fraction. From \eqref{eq:rho} we see that the different densities have different dependencies on the scale factor $a$. These dependencies also extends to the density fractions \eqref{eq:Omega}. Since radiation is dependent on $a^{-4}$, we expect that to be dominant in the early Universe with $a << 1$. This is what we see from fig. \ref{fig:omega}. Since $\Omega_{r,0}$ is so much smaller than $\Omega_{b,0}$ and $\Omega_{m,0}$, matter (mostly dark matter) will start dominate even though $a<1$. This is also what we see from the plot. At present time, when $a=1$, we expect that $\Omega_{x,0}$ is the determiner of the values of the densities, with $\Omega_{\Lambda,0}$ being the largest, which we can see is correct from the figure.
 
+
+%At some point matter (baryons and dark matter) will be more dominant than radiation due to the fact that $\Omega_{r,0} \approx 10^{-6}$, so even though its dependence on $a^{-4}$ makes it larger that matter( which has a dependence on $a^{-3}$), if $a<1$, this only holds as long as $a < 10^{-6}$, so around this point matter starts to dominate (dark matter in this case, since $\Omega_{b,0}$ is only $0.046$).
 
 \begin{figure}[H]
      \centering
