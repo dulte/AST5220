@@ -167,7 +167,7 @@ contains
 
 
   ! ###################################################################
-  ! Ass. subroutines and functions used to calculate various parameters
+  ! Subroutines and functions used to calculate various parameters
   ! ###################################################################
 
   ! Task: Write a function that computes H at given x
