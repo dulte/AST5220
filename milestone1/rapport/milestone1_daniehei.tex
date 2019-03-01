@@ -125,7 +125,7 @@ We want to know $\eta$ at all possible time, not just the ones used here. Thus w
 As a last sanity check, we are going to calculate the density parameters to see if the are as we would expect from our Universe. They are given as
 
 \begin{equation}
-\Omega_{x} = \frac{\Omega_{x,0}\rho_{c,0}}{\rho_{0}} a^{k} = \frac{\Omega_{x,0}\rho_{c,0}}{\rho_{0}} e^{k},
+\Omega_{x} = \frac{\Omega_{x,0}\rho_{c,0}}{\rho_{c}} a^{k} = \frac{\Omega_{x,0}\rho_{c,0}}{\rho_{c}} e^{kx},
 \end{equation}
 where $k$ is the exponent associated with each component of the Universe.
 
@@ -146,7 +146,7 @@ where $k$ is the exponent associated with each component of the Universe.
 
 
 
-In fig. \ref{fig:Hs} we see the Hubble parameter as a function of the scale factor and red shift. From fig. \ref{fig:H} we see three different epochs, with different slopes. If we look at fig. \ref{fig:omega} we see that these different epochs corresponds domination of the different constituents -- radiation, matter and dark energy --. If we look at radiation- and matter dominated epochs we know that the Hubble parameters should be $H_{rad} \propto a^{-2}$ and $H_{matter} \propto a^{-3/2}$. This is the same as we see in first two epochs in fig. \ref{fig:H} -- approximately $x < -10$ and $-7<x<-2$--. This indicates that our Hubble parameter is correctly calculated.
+In fig. \ref{fig:Hs} we see the Hubble parameter as a function of the scale factor and red shift. From fig. \ref{fig:H} we see three different epochs, with different slopes. If we look at fig. \ref{fig:omega} we see that these different epochs corresponds domination of the different constituents -- radiation, matter and dark energy -- \footnote{Of course, must of the time all of them contribute to some amount, but we can assume that for some time periods only one dominates, so that we can make approximations to compare with.}. If we look at radiation- and matter dominated epochs we know that the Hubble parameters should be $H_{rad} \propto a^{-2}$ and $H_{matter} \propto a^{-3/2}$. This is the same as we see in first two epochs in fig. \ref{fig:H} -- approximately $x < -10$ and $-7<x<-2$--. This indicates that our Hubble parameter is correctly calculated.
 
 
 \begin{figure}[ht]
@@ -157,10 +157,7 @@ In fig. \ref{fig:Hs} we see the Hubble parameter as a function of the scale fact
 
 
 
-Fig. \ref{fig:omega} shows the evolution of the density fraction. From \eqref{eq:rho} we see that the different densities have different dependencies on the scale factor $a$. These dependencies also extends to the density fractions \eqref{eq:Omega}. Since radiation is dependent on $a^{-4}$, we expect that to be dominant in the early Universe with $a << 1$. This is what we see from fig. \ref{fig:omega}. Since $\Omega_{r,0}$ is so much smaller than $\Omega_{b,0}$ and $\Omega_{m,0}$, matter (mostly dark matter) will start dominate even though $a<1$. This is also what we see from the plot. At present time, when $a=1$, we expect that $\Omega_{x,0}$ is the determiner of the values of the densities, with $\Omega_{\Lambda,0}$ being the largest, which we can see is correct from the figure.
-
-
-%At some point matter (baryons and dark matter) will be more dominant than radiation due to the fact that $\Omega_{r,0} \approx 10^{-6}$, so even though its dependence on $a^{-4}$ makes it larger that matter( which has a dependence on $a^{-3}$), if $a<1$, this only holds as long as $a < 10^{-6}$, so around this point matter starts to dominate (dark matter in this case, since $\Omega_{b,0}$ is only $0.046$).
+Fig. \ref{fig:omega} shows the evolution of the density fraction. From \eqref{eq:rho} we see that the different densities have different dependencies on the scale factor $a$. These dependencies also extends to the density fractions \eqref{eq:Omega}. Since radiation is dependent on $a^{-4}$, we expect that to be dominant in the early Universe with $a << 1$. This is what we see from fig. \ref{fig:omega}. Since $\Omega_{r,0}$ is so much smaller than $\Omega_{b,0}$ and $\Omega_{m,0}$, matter (mostly dark matter) will start to dominate even though $a<1$. This is also what we see from the plot. At present time, when $a=1$, we expect that $\Omega_{x,0}$ is the determiner of the values of the density parameters, with $\Omega_{\Lambda,0}$ being the largest, which we can see is correct from the figure.
 
 \begin{figure}[H]
      \centering
@@ -168,7 +165,7 @@ Fig. \ref{fig:omega} shows the evolution of the density fraction. From \eqref{eq
 	\caption{Here we can see the conformal time $\eta$ through the lifetime of the Universe. Both the axis are logged with the natural logarithm. The slope of this plot is determined by the type of energy/matter that dominates the Universe. This will be described more in the text. }\label{fig:eta}}
 \end{figure}
 
-Fig. \ref{fig:eta} shows the main result of this exercise, the conformal time $\eta$. Once again we see that the plot is divided into the same epochs as seen in fig. \ref{fig:Hs} and fig. \ref{fig:omega}. If we look at the just the radiation- and matter dominated epochs we can find that $\eta_{rad} \propto a$ and $\eta_{matter}\propto \sqrt{a}$. This corresponds well with the slops we see in fig. \ref{fig:eta}.
+Fig. \ref{fig:eta} shows the main result of this exercise, the conformal time $\eta$. Once again we see that the plot is divided into the same epochs as seen in fig. \ref{fig:Hs} and fig. \ref{fig:omega}. If we look at the just the radiation- and matter dominated epochs we can find that $\eta_{rad} \propto a$ and $\eta_{matter}\propto \sqrt{a}$. This corresponds well with the slops we see in fig. \ref{fig:eta}. This indicates that our calculations are correct.
 
 
 \section{Conclusion}
