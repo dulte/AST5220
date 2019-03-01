@@ -199,8 +199,8 @@ contains
     real(dp), intent(in) :: x
     real(dp)             :: get_dH_p
 
-    ! TODO change this to the correct expression
-    get_dH_p = exp(x)*(get_H(x) + exp(x)*get_H_p(x))
+    
+    get_dH_p = exp(x)*(get_H(x) + H_0**2/(get_H(x)*2.)*(-3*(Omega_b+Omega_m)*exp(-3*x)-4*(Omega_r+Omega_nu)*exp(-4*x)))
 
   end function get_dH_p
 
@@ -222,7 +222,7 @@ contains
     real(16), parameter :: PI_16 = 4 * atan (1.0_16)
     real(dp)             :: get_critical_density
 
-    get_critical_density = exp(x)*(get_H(x) + H_0**2/get_H(x)*(-3*(Omega_b+Omega_m)*exp(-3*x)-4*(Omega_r+Omega_nu)*exp(-4*x)))
+    get_critical_density = (3.*get_H(x)**(2.))/(8.*PI_16*G_grav)
 
 
   end function get_critical_density

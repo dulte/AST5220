@@ -54,10 +54,7 @@ We need a way of quantifying this expansion, to be ables to calculate this chang
 \begin{equation}\label{eq:H}
 H = \frac{\dot{a}}{a},
 \end{equation}
-where $a$ is the scale factor and $\dot{a}$ its time derivative. The Hubble parameters is an observable quantity which describes the expansion of the Universe. From this we are going to calculate the \textit{conformal time} $\eta$, which is a convenient way of representing cosmic time in many of the equations we are going to solve in later milestones.
-
-\todo{Add a better description of the physical meaning $eta$ and its connection with the age of the universe.}
-\todo{Add description of how you calculated the density fractions (in theory/methods)}
+where $a$ is the scale factor and $\dot{a}$ its time derivative. The Hubble parameters is an observable quantity which describes the expansion of the Universe. From this we are going to calculate the \textit{conformal time} $\eta$, which is a convenient way of representing time in many of the equations we are going to solve in later milestones. The physical interpretation of $\eta$ is the time it takes light no reach the outer limit of the observable universe. So for a given time, $\eta$  gives the proper distance to the particle horizon with the relation $d_{part. hor.} = c\eta$.
 
 
 \section{Theory}
@@ -78,7 +75,7 @@ where $\rho_{x,0}$ is the density and $\rho_{crit,0} = \frac{3H_0^2}{8\pi G}$ is
 
 To find the $\Omega_{x}$ throughout time, we need the densities. These are gives as
 \begin{equation}\label{eq:rho}
-\rho_{m} = \rho_{m,0} a^{-3}, \quad \rho_{b} = \rho_{b,0} a^{-3}, \quad \rho_{4} = \rho_{4,0} a^{-4}, \quad \rho_{\Lambda} = \rho_{\Lambda,0}.
+\rho_{m} = \rho_{m,0} a^{-3}, \quad \rho_{b} = \rho_{b,0} a^{-3}, \quad \rho_{r} = \rho_{r,0} a^{-4}, \quad \rho_{\Lambda} = \rho_{\Lambda,0}.
 \end{equation}
 
 Before going on to look at the conformal time, we are going to define some variables to make our life easier. First, we are not going to have \eqref{eq:Friedmann} as a function of time or the scale factor, but rather over the logarithmic scale factor $x \equiv \ln a = - \ln(1+z)$, where $z$ is the red shift. We are also going to introduce the scaled Hubble parameter $\mathcal{H} \equiv aH$.
@@ -107,7 +104,7 @@ We also want to find an expression for $d\mathcal{H}/dx$. This is simply done wi
 \frac{d\mathcal{H}}{dx} = \frac{d}{dx}e^x H = e^x \left( H + \frac{dH}{dx}\right) = e^x \left( H + \frac{d}{dx}\left[H_0 \sqrt{(\Omega_{b,0} + \Omega_{m,0})\exp(-3x) + (\Omega_{r,0} + \Omega_{\nu,0})\exp(-4x) + \Omega_{\Lambda,0}}   \right]\right) 
 \end{equation*}
 \begin{equation}
-= e^x\left(H + \frac{H_0^2}{H}\left[-3(\Omega_{b,0} + \Omega_{m,0})\exp(-3x) -4 (\Omega_{r,0} + \Omega_{\nu,0})\exp(-4x)\right] \right)
+= e^x\left(H + \frac{H_0^2}{2H}\left[-3(\Omega_{b,0} + \Omega_{m,0})\exp(-3x) -4 (\Omega_{r,0} + \Omega_{\nu,0})\exp(-4x)\right] \right)
 \end{equation}
 
 \section{Method}
@@ -124,6 +121,13 @@ Thus we have an initial value for $\eta$. To integrate until today we are going 
 
 We want to know $\eta$ at all possible time, not just the ones used here. Thus we use a \textit{spline} on the calculated dataset to find a continuous approximation to $\eta$.
 
+
+As a last sanity check, we are going to calculate the density parameters to see if the are as we would expect from our Universe. They are given as
+
+\begin{equation}
+\Omega_{x} = \frac{\Omega_{x,0}\rho_{c,0}}{\rho_{0}} a^{k} = \frac{\Omega_{x,0}\rho_{c,0}}{\rho_{0}} e^{k},
+\end{equation}
+where $k$ is the exponent associated with each component of the Universe.
 
 
 \newpage
