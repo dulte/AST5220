@@ -78,9 +78,9 @@ To find the $\Omega_{x}$ throughout time, we need the densities. These are gives
 \rho_{m} = \rho_{m,0} a^{-3}, \quad \rho_{b} = \rho_{b,0} a^{-3}, \quad \rho_{r} = \rho_{r,0} a^{-4}, \quad \rho_{\Lambda} = \rho_{\Lambda,0}.
 \end{equation}
 
-Before going on to look at the conformal time, we are going to define some variables to make our life easier. First, we are not going to have \eqref{eq:Friedmann} as a function of time or the scale factor, but rather over the logarithmic scale factor $x \equiv \ln a = - \ln(1+z)$, where $z$ is the red shift. We are also going to introduce the scaled Hubble parameter $\mathcal{H} \equiv aH$.
+Before going on to look at the conformal time, we are going to define some variables to make our life easier. First, we don't want to have \eqref{eq:Friedmann} as a function of time nor the scale factor, but rather over the logarithmic scale factor $x \equiv \ln a = - \ln(1+z)$, where $z$ is the red shift. We are also going to introduce the scaled Hubble parameter $\mathcal{H} \equiv aH$.
 
-We can now find the conformal time $\eta$. From the FRW-line element it is easy to show that one can introduce a new time variable, defines as
+We can now find the conformal time $\eta$. From the FRW-line element it is easy to show that one can introduce a new time variable, defined as
 \begin{equation}
 \frac{d\eta}{dt} = \frac{c}{a}.
 \end{equation}
@@ -92,7 +92,7 @@ Since we have introduces the time parameter $x$, we can rewrite this again
 \begin{equation}\label{eq:deta/dx}
 \frac{d\eta}{da} = \frac{d\eta}{dx}\frac{dx}{da} = \frac{d\eta}{dx}\frac{d \ln a}{da} = \frac{d\eta}{dx}\frac{1}{a} \Rightarrow \frac{d\eta}{dx} = \frac{c}{a\mathcal{H}}\cdot a = \frac{c}{\mathcal{H}}.
 \end{equation}
-This makes it easy to integrate to find 
+This makes it easy to integrate 
 
 \begin{equation}\label{eq:eta}
 \eta(x) = \int_{\log a_{rec}}^{x} \frac{c}{\mathcal{H}} dx.
@@ -109,9 +109,9 @@ We also want to find an expression for $d\mathcal{H}/dx$. This is simply done wi
 
 \section{Method}
 
-We are going to calculate \eqref{eq:Friedmann} by saying that we are going to look at the universe from the start of the recombination, $z = 1630.4$, to the end of recombination, $z = 614.2$, and from this to today, $z = 0$. We are then going to convert these red shifts into the logarithmic scale factor, and make a grid with $200$ points during recombination and $300$ points after. With this grid we can calculate $H$ from \eqref{eq:Friedmann}.
+We start by looking at the universe from the start of the recombination, $z = 1630.4$, to the end of recombination, $z = 614.2$, and from this to today, $z = 0$. We are then going to convert these red shifts into the logarithmic scale factor, and make a grid with $200$ points during recombination and $300$ points after. %With this grid we can calculate $H$ from \eqref{eq:Friedmann}.
 
-To find the the conformal time $\eta$ we need a new grid. This time we start with a grid from $a=10^{-10}$ to $a=1$ (today), with 1000 points. To be able to integrate \eqref{eq:deta/dx} we need initial condition for $\eta$ at the start of recombination. We can do this be noting that since we are in a radiation dominated Universe at the start, we can write $a\mathcal{H}(a) \rightarrow H_0\sqrt{\Omega_r}$ as $a\rightarrow 0$. This means that we can make the integral from the start of time, to the initial $a$
+To find the the conformal time $\eta$ we need a new grid. This time we start with a grid from $a=10^{-10}$ to $a=1$ (today), with 1000 points. To be able to integrate \eqref{eq:deta/dx} we need initial condition for $\eta$ at the initial value of $a$. We can do this be noting that since we are in a radiation dominated Universe at the start, we can write $a\mathcal{H}(a) \rightarrow H_0\sqrt{\Omega_r}$ as $a\rightarrow 0$. This means that we can make the integral from the start of time, to the initial $a$
 
 \begin{equation}
 \eta(a=a_{init}) = \int_0^{a_{init}} \frac{c}{a\mathcal{H}}da \approx \int_0^{a_{init}} \frac{c}{H_0\sqrt{\Omega_r}}da = \frac{c\cdot a_{init}}{H_0\sqrt{\Omega_r}}.
