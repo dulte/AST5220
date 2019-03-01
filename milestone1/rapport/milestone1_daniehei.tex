@@ -111,7 +111,7 @@ We also want to find an expression for $d\mathcal{H}/dx$. This is simply done wi
 
 We start by looking at the universe from the start of the recombination, $z = 1630.4$, to the end of recombination, $z = 614.2$, and from this to today, $z = 0$. We are then going to convert these red shifts into the logarithmic scale factor, and make a grid with $200$ points during recombination and $300$ points after. %With this grid we can calculate $H$ from \eqref{eq:Friedmann}.
 
-To find the the conformal time $\eta$ we need a new grid. This time we start with a grid from $a=10^{-10}$ to $a=1$ (today), with 1000 points. To be able to integrate \eqref{eq:deta/dx} we need initial condition for $\eta$ at the initial value of $a$. We can do this be noting that since we are in a radiation dominated Universe at the start, we can write $a\mathcal{H}(a) \rightarrow H_0\sqrt{\Omega_r}$ as $a\rightarrow 0$. This means that we can make the integral from the start of time, to the initial $a$
+To find the conformal time $\eta$ we need a new grid. This time we start with a grid from $a=10^{-10}$ to $a=1$ (today), with 1000 points. To be able to integrate \eqref{eq:deta/dx} we need initial condition for $\eta$ at the initial value of $a$. We can do this be noting that since we are in a radiation dominated Universe at the start, we can write $a\mathcal{H}(a) \rightarrow H_0\sqrt{\Omega_r}$ as $a\rightarrow 0$. This means that we can write the integral from the start of time, to the initial $a$
 
 \begin{equation}
 \eta(a=a_{init}) = \int_0^{a_{init}} \frac{c}{a\mathcal{H}}da \approx \int_0^{a_{init}} \frac{c}{H_0\sqrt{\Omega_r}}da = \frac{c\cdot a_{init}}{H_0\sqrt{\Omega_r}}.
@@ -139,14 +139,14 @@ where $k$ is the exponent associated with each component of the Universe.
      \centering
      \subfloat[][This shows the Hubble Parameter as a function of the logarithmic scale factor $x$.]{\includegraphics[scale=0.4]{H.png}\label{fig:H}}
      \subfloat[][This shows the Hubble Parameter as a function red shift $z$]{\includegraphics[scale=0.4]{H_z.png}\label{fig:H_z}}
-     \caption{These plots show the evolution of the Hubble parameter through the lifetime of the Universe. Notice that for \ref{fig:H} both axes are logged with the natural logarithm. Since \ref{fig:H_z} isn't plotted with a logarithmic variable, no logarithm on the y-axis is required. This unfortunately makes a direct comparison between the plots less trivial.}
+     \caption{Plots showing the evolution of the Hubble parameter through the lifetime of the Universe. Notice that for \ref{fig:H} both axes are logged with the natural logarithm. Since \ref{fig:H_z} isn't plotted with a logarithmic variable, no logarithm on the y-axis is required. This unfortunately makes a direct comparison between the plots less trivial.}
      \label{fig:Hs}
   
 \end{figure}
 
 
 
-In fig. \ref{fig:Hs} we see the Hubble parameter as a function of the scale factor and red shift. From fig. \ref{fig:H} we see three different epochs, with different slopes. If we look at fig. \ref{fig:omega} we see that these different epochs corresponds domination of the different constituents -- radiation, matter and dark energy -- \footnote{Of course, must of the time all of them contribute to some amount, but we can assume that for some time periods only one dominates, so that we can make approximations to compare with.}. If we look at radiation- and matter dominated epochs we know that the Hubble parameters should be $H_{rad} \propto a^{-2}$ and $H_{matter} \propto a^{-3/2}$. This is the same as we see in first two epochs in fig. \ref{fig:H} -- approximately $x < -10$ and $-7<x<-2$--. This indicates that our Hubble parameter is correctly calculated.
+In fig. \ref{fig:Hs} we see the Hubble parameter as a function of the scale factor and red shift. From fig. \ref{fig:H} we see three different epochs, with different slopes. If we look at fig. \ref{fig:omega} we see that these different epochs corresponds domination of the different constituents -- radiation, matter and dark energy -- \footnote{Of course, most of the time all of them contribute to some amount, but we can assume that for some time periods only one dominates, so that we can make approximations to compare with.}. If we look at radiation- and matter dominated epochs we know that the Hubble parameters should be $H_{rad} \propto a^{-2}$ and $H_{matter} \propto a^{-3/2}$. This is the same as we see in first two epochs in fig. \ref{fig:H} -- approximately $x < -10$ and $-7<x<-2$--. This indicates that our Hubble parameter is correctly calculated.
 
 
 \begin{figure}[ht]
@@ -157,7 +157,7 @@ In fig. \ref{fig:Hs} we see the Hubble parameter as a function of the scale fact
 
 
 
-Fig. \ref{fig:omega} shows the evolution of the density fraction. From \eqref{eq:rho} we see that the different densities have different dependencies on the scale factor $a$. These dependencies also extends to the density fractions \eqref{eq:Omega}. Since radiation is dependent on $a^{-4}$, we expect that to be dominant in the early Universe with $a << 1$. This is what we see from fig. \ref{fig:omega}. Since $\Omega_{r,0}$ is so much smaller than $\Omega_{b,0}$ and $\Omega_{m,0}$, matter (mostly dark matter) will start to dominate even though $a<1$. This is also what we see from the plot. At present time, when $a=1$, we expect that $\Omega_{x,0}$ is the determiner of the values of the density parameters, with $\Omega_{\Lambda,0}$ being the largest, which we can see is correct from the figure.
+Fig. \ref{fig:omega} shows the evolution of the density fraction. From \eqref{eq:rho} we see that the different densities have different dependencies on the scale factor $a$. These dependencies also extends to the density fractions \eqref{eq:Omega}. Since radiation is dependent on $a^{-4}$, we expect that to be dominant in the early Universe with $a << 1$. This is what we see from fig. \ref{fig:omega}. Since $\Omega_{r,0}$ is so much smaller than $\Omega_{b,0}$ and $\Omega_{m,0}$, matter (mostly dark matter) will start to dominate even though $a<1$. Which is also shown in the plot. At present time, when $a=1$, we expect that $\Omega_{x,0}$ is the determiner of the values of the density parameters, with $\Omega_{\Lambda,0}$ being the largest, which we can see is correct from the figure.
 
 \begin{figure}[H]
      \centering
