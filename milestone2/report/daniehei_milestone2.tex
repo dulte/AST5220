@@ -1,0 +1,116 @@
+\documentclass[a4paper,norsk, 10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage[norsk]{babel}
+\usepackage{a4wide}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{amssymb}
+\usepackage[dvips]{epsfig}
+\usepackage[toc,page]{appendix}
+\usepackage[T1]{fontenc}
+\usepackage{cite} % [2,3,4] --> [2--4]
+\usepackage{shadow}
+\usepackage{hyperref}
+\usepackage{titling}
+\usepackage{marvosym }
+\usepackage{subcaption}
+\usepackage[noabbrev]{cleveref}
+\usepackage{cite}
+\usepackage{todonotes}
+
+
+\setlength{\droptitle}{-10em}   % This is your set screw
+
+\setcounter{tocdepth}{2}
+
+\lstset{language=c++}
+\lstset{alsolanguage=[90]Fortran}
+\lstset{alsolanguage=Python}
+\lstset{basicstyle=\small}
+\lstset{backgroundcolor=\color{white}}
+\lstset{frame=single}
+\lstset{stringstyle=\ttfamily}
+\lstset{keywordstyle=\color{red}\bfseries}
+\lstset{commentstyle=\itshape\color{blue}}
+\lstset{showspaces=false}
+\lstset{showstringspaces=false}
+\lstset{showtabs=false}
+\lstset{breaklines}
+\title{AST5220 Milestone 2}
+\author{Daniel Heinesen, daniehei}
+\begin{document}
+\maketitle
+\section{Introduction}
+In this exercise we are going to calculate the optical depth and visibility function. These quantities describe the how easy/difficult it is for a photon to travel. \todo{Rewrite} When later calculating the Boltzmann equations for the photons, we will have to use the optical depth \todo{And visibility function?}.
+
+Due to the large amount of free electrons in the early Universe, photons could not travel far without being absorbed and scattered by the electrons. So to get a sense of the optical depth of the photons, we need to know the amount of electrons we have in our Universe. This will be done with the Saha and Peeble's equation. Having the density of electrons we can easily find the optical depth and visibility function.
+
+\section{Theory}
+We cannot find the electron density $n_e$ directly. We need to go through the fractional electron density $X_e = n_e/n_H$, where $n_H$ is the density of hydrogen in the Universe. To find $X_e$ we are going to use two different equations. If $X_e \approx 1$ -- meaning that there are way more free electrons than neutral\todo{Does $H$ mean neutral hydrogen} hydrogen in the Universe -- we can use the Saha equation
+\begin{equation}
+\frac{X_e^2}{1-X_e} = \frac{1}{n_b}\left(\frac{m_e T_b k_b}{2\pi \hbar^2}\right)^{3/2} e^{-\epsilon_0/T_b k_b},
+\end{equation}
+where $n_b$ is the density of baryons, $m_e$ the mass of an electron and $T_b$ the temperature of the baryons. If we have $X_e < 0.99$ this equation becomes inaccurate and we need to solve Peebles' equation. This equation describes $X_e$ for all values of $X_e$ but is more difficult to solve, thus why be use the Saha equations for the earliest times. The Peebles' equation is given as
+\begin{equation}\label{eq:peebles}
+\frac{dX_e}{dx} = \frac{C_r}{H}\left[\beta (T_b)(1-X_e) - n_H \alpha^{(2)}(T_b)X_e^2 \right],
+\end{equation}
+where
+
+\begin{equation}
+C_r (T_b) = \frac{\Lambda_{2s \rightarrow 1s}+ \Lambda_{\alpha}}{\Lambda_{2s \rightarrow 1s} + \Lambda_{\alpha} + \beta^{(2)}(T_b)},
+\end{equation}
+\begin{equation}
+\Lambda_{2s\rightarrow 1s} = 8.227 s^{-1},
+\end{equation}
+\begin{equation}
+\Lambda_{\alpha} = \frac{H}{(\hbar c)^3}\frac{27\epsilon_0^3}{(8\pi)^2 n_{1s}},
+\end{equation}
+\begin{equation}
+n_{1s} = (1-X_e)n_{H},
+\end{equation}
+\begin{equation}
+\beta^{(2)}(T_b) = \beta(T_b)e^{3\epsilon_0/4T_bk_b},
+\end{equation}
+\begin{equation}
+\beta(T_b) = \alpha^{(2)}(T_b)\left(\frac{m_eT_b k_b}{2\pi \hbar^2}\right)^{3/2}e^{-\epsilon_0/T_bk_b},
+\end{equation}
+\begin{equation}
+\alpha^{(2)}(T_b) = \frac{64\pi}{\sqrt{27\pi}}\frac{\alpha^2}{m_e^2}\sqrt{\frac{\epsilon_0}{T_bk_b}}\frac{\hbar^2}{c}\phi_{2}(T_b),
+\end{equation}
+\begin{equation}
+\phi_{2}(T_b) = 0.448\ln(\epsilon_0/T_bk_b).
+\end{equation}
+
+All of these equation use SI units. 
+
+From $X_e$ we can find
+
+\begin{equation}
+n_e = X_e n_H,
+\end{equation}
+where
+\begin{equation}
+n_H = n_b \approx \frac{\rho_b}{m_H} = \frac{\Omega_b \rho_c}{m_h a^3}.
+\end{equation}
+We can use this because we assume that all baryonic matter in the Universe is hydrogen.
+
+With this one could find the optical depth, defined as 
+\begin{equation}
+\tau(\eta) = \int_{\eta}^{\eta_0} n_e \sigma_T a c d\eta \Leftrightarrow \tau(x) = \int_x^{x_0 = 0} - \frac{n_e \sigma_T a c}{\mathcal{H}} dx,
+\end{equation}
+where $\sigma_T$ is the Thompson cross section, $c$ is the speed of light, $a$ is the scale factor, $x$ is the logarithm scale factor and $\mathcal{H}$ the scaled Hubble parameter $aH$. And finally from this we can get the visibility function
+
+\begin{equation}
+\tilde{g} (x) = -t'e^{-\tau} = -\frac{d\tau}{dx}e^{-\tau}.
+\end{equation}
+
+
+\section{Method}
+
+
+\end{document}
+

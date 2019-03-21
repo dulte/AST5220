@@ -23,7 +23,7 @@ def read_file(name):
 
 if __name__ == "__main__":
     output_path = "../output/"
-    rapport_path = "../rapport/"
+    rapport_path = "../report/"
 
     x, X_e = read_file(output_path + "X_e.dat")
 
