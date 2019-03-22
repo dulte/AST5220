@@ -9,10 +9,13 @@ program cmbspec
   ! Initialize time grids
   call initialize_time_mod
 
-  ! Output to file desired quantities here
-  call write_arrays_to_file
-
+  
+  ! Initialize rec_mod
   call initialize_rec_mod
+
+  ! Output to file desired quantities here
+  !call write_arrays_to_file
+  call write_rec_to_file
 
   
 end program cmbspec

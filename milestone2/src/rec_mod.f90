@@ -127,23 +127,65 @@ contains
 
 
 
-    ! Writes to file
+    
+    
+
+  end subroutine initialize_rec_mod
+
+
+
+  subroutine write_rec_to_file
+    implicit none
+
+    integer(i4b) :: i, n ! Defines the interation variable, and number of steps
+    real(dp)     :: x_0, x_start, x, dx, n_H
+    real(dp),    allocatable, dimension(:) ::  x_array
+
+
+    ! Gives values to variables
+    
+    x_start       = -18.d0                                ! x at start of time
+    x_0           = 0.d0                                  ! x at present age
+    n             = 5000                                  ! Number of steps
+    dx            = (x_0 + x_start)/(n-1)                 ! Increment needed to fill x array
+    
+
+    ! Allocates and filles array with x
+    
+    allocate(x_array(n))
+    
+    x_array = [(x_0 + dx*(i-1),i=1,n)]
+
+
+    ! Opens all the necessary files
     open(1,file='output/X_e.dat')
     open(2,file='output/tau.dat')
     open(3,file='output/dtau.dat')
-    open(4,file='output/g.dat')
-    open(5,file='output/dg.dat')
-    open(6,file='output/ddg.dat')
-    do i = 1, n
-      Write(1,*) x_rec(i), X_e(i)
-      Write(2,*) x_rec(i), get_tau(x_rec(i))
-      Write(3,*) x_rec(i), get_dtau(x_rec(i))
-      Write(4,*) x_rec(i), get_g(x_rec(i))
-      Write(5,*) x_rec(i), get_dg(x_rec(i))
-      Write(6,*) x_rec(i), get_ddg(x_rec(i))
-    end do
+    open(4,file='output/ddtau.dat')
+    open(5,file='output/g.dat')
+    open(6,file='output/dg.dat')
+    open(7,file='output/ddg.dat')
+    
 
-  end subroutine initialize_rec_mod
+    
+    
+    ! Loops over z and x, and writes the different fuctions to file
+    do i = 1, n
+
+      x = x_array(i)
+      n_H = (Omega_b*rho_c/(m_H*exp(3*x)))
+
+
+
+      Write(1,*) x, get_n_e(x)/n_H
+      Write(2,*) x, get_tau(x)
+      Write(3,*) x, get_dtau(x)
+      Write(4,*) x, get_ddtau(x)
+      Write(5,*) x, get_g(x)
+      Write(6,*) x, get_dg(x)
+      Write(7,*) x, get_ddg(x)
+    end do
+  end subroutine write_rec_to_file
 
 
   ! Task: Complete routine for computing n_e at arbitrary x, using precomputed information
