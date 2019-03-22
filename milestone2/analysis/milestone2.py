@@ -47,7 +47,7 @@ if __name__ == "__main__":
     plt.semilogy(x,abs(dtau),"--",label=r"$|\tau'|$")
     plt.semilogy(x,abs(ddtau),"--",label=r"$|\tau''|$")
     plt.xlabel(r"$x$")
-    plt.ylabel(r"$\tau, |\tau'|$")
+    plt.ylabel(r"$\tau, |\tau'|, |\tau''|$")
     plt.title("Optical Depth")
     plt.legend()
     plt.xlim(-18,-0.5)
