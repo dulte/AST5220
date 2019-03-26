@@ -51,7 +51,7 @@ if __name__ == "__main__":
     plt.title("Optical Depth")
     plt.legend()
     plt.xlim(-18,-0.5)
-    plt.ylim(1e-12,1e20)
+    #plt.ylim(1e-12,1e20)
     plt.savefig(report_path+"tau.png")
     plt.show()
 
