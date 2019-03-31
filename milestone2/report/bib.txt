@@ -1,0 +1,9 @@
+@article{Callin:2006qx,
+      author         = "Callin, Petter",
+      title          = "{How to calculate the CMB spectrum}",
+      year           = "2006",
+      eprint         = "astro-ph/0606683",
+      archivePrefix  = "arXiv",
+      primaryClass   = "astro-ph",
+      SLACcitation   = "%%CITATION = ASTRO-PH/0606683;%%"
+}
