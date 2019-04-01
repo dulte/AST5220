@@ -47,16 +47,16 @@
 \section{Introduction}
 In this exercise we are going to look at the density of electrons in the Universe, and their impact on the mean free path, or optical depth of photons. These quantities will contribute on how the distribution of photons evolve, which will be calculated in later milestones.
 
-Due to the large amount of free electrons in the early Universe, photons could not travel far without being absorbed and scattered by the electrons. This is described by the optical depth. To get a sense of the optical depth of the photons, we need to know the amount of electrons we have in our Universe. This will be done with the Saha and Peebles' equation. Having the density of electrons we can easily find the optical depth and visibility function. From these we can find out at which point the Universe was translucent enough for the photons to travel freely; this is the time of recombination.
+Due to the large amount of free electrons in the early Universe, photons could not travel far without being scattered by the electrons. This is described by the optical depth. To get a sense of the optical depth of the photons, we need to know the amount of electrons we have in our Universe. This will be done with the Saha and Peebles' equation. Having the density of electrons we can easily find the optical depth and visibility function. From these we can find out at which point the Universe was translucent enough for the photons to travel freely; this is the time of recombination.
 
 As a quality check, the results we get below are given on the same format as Callin\cite{callin}.
 
 \section{Theory}
-We cannot find the electron density $n_e$ directly. We need to go through the fractional electron density $X_e = n_e/n_H$, where $n_H$ is the density of protons in the Universe. To find $X_e$ we are going to use two different equations. If $X_e \approx 1$ -- meaning that there are way more free electrons than protons in the Universe -- we can use the Saha equation
+We cannot find the electron density $n_e$ directly. We need to go through the fractional electron density $X_e = n_e/n_H$, where $n_H$ is the density of protons in the Universe. To find $X_e$ we are going to use two different equations. If $X_e \approx 1$ we can use the Saha equation
 \begin{equation}\label{eq:saha}
 \frac{X_e^2}{1-X_e} = \frac{1}{n_b}\left(\frac{m_e T_b k_b}{2\pi \hbar^2}\right)^{3/2} e^{-\epsilon_0/T_b k_b},
 \end{equation}
-where $n_b$ is the density of baryons, $m_e$ the mass of an electron and $T_b$ the temperature of the baryons. If we have $X_e < 0.99$ this equation becomes inaccurate and we need to solve Peebles' equation. This equation describes $X_e$ for all temperatures and $n_b$ but is more difficult to solve, thus why be use the Saha equations for the earliest times. The Peebles' equation is given as
+where $n_b$ is the density of baryons, $m_e$ the mass of an electron and $T_b$ the temperature of the baryons. If we have $X_e < 0.99$ this equation becomes inaccurate and we need to solve Peebles' equation. This equation describes $X_e$ for all temperatures and $n_b$, but is more difficult to solve, thus why be use the Saha equations for the earliest times. Peebles' equation is given as
 \begin{equation}\label{eq:peebles}
 \frac{dX_e}{dx} = \frac{C_r}{H}\left[\beta (T_b)(1-X_e) - n_H \alpha^{(2)}(T_b)X_e^2 \right],
 \end{equation}
@@ -87,7 +87,7 @@ n_{1s} = (1-X_e)n_{H},
 \phi_{2}(T_b) = 0.448\ln(\epsilon_0/T_bk_b).
 \end{equation}
 
-All of these equation use SI units \todo{Check units}. 
+All of these equations are expressed in SI units 
 
 From $X_e$ we can find
 
@@ -107,8 +107,10 @@ With this one could find the optical depth, defined as
 where $\sigma_T$ is the Thompson cross section, $c$ is the speed of light, $a$ is the scale factor, $x$ is the logarithm scale factor and $\mathcal{H}$ the scaled Hubble parameter $aH$. And finally from this we can get the visibility function
 
 \begin{equation}\label{eq:g}
-\tilde{g} (x) = -\tau'e^{-\tau} = -\frac{d\tau}{dx}e^{-\tau}.
+\tilde{g} (x) = -\tau'e^{-\tau} = -\frac{d\tau}{dx}e^{-\tau},
 \end{equation}
+
+where $\tau' = \frac{d\tau}{dx}$.
 
 
 \section{Method}
@@ -123,14 +125,14 @@ The Saha equation \eqref{eq:saha} is a normal quadratic equation, which we can w
 X_e^2 + X_e\cdot C - C = 0,
 \end{equation}
 
-where $C = \frac{1}{n_b}\left(\frac{m_e T_b k_b}{2\pi \hbar^2}\right)^{3/2} e^{-\epsilon_0/T_b k_b}$. This can be solved by the normal quadratic formula. But since this is an equation which can be a bit unstable \footnote{By this I mean that we can have a subtraction of two small numbers, which is numerically unstable}, we will instead use a more stable solution \footnote{Known by the name \textit{The citardauq formula}, which is just \textit{quadratic} backwards.}
+where $C = \frac{1}{n_b}\left(\frac{m_e T_b k_b}{2\pi \hbar^2}\right)^{3/2} e^{-\epsilon_0/T_b k_b}$. This can be solved by the normal quadratic formula, but since this is an equation which can be a bit unstable \footnote{By this I mean that we can have a subtraction of two small numbers, which is numerically unstable}, we will instead use a more stable solution \footnote{Known as the \textit{citardauq} formula, which is just \textit{quadratic} backwards.}
 
 \begin{equation}
 X_e = \frac{2c}{-b \mp \sqrt{b^2 - 4ac}} = \frac{-2C}{-C - \sqrt{C^2 + 4C}}.
 \end{equation}
 We only used the negative sign in the $\mp$ because this ensures us a positive $X_e$.
 
-When $X_e$ goes below $0.99$ we will switch to Peebles' equation \eqref{eq:peebles}. This is a differential equation, so here we will use the same solver as in milestone1. This is a integration method, using the \textit{rkqs} integration scheme. There can be some numerical instability in the integrand, with the two exponents in \eqref{eq:beta2} and \eqref{eq:beta} causing some problems. To ensure that nothing goes wrong, we will combine them, so they become stable. Note that we will need to find $H$ for a given $x$, this is done with a function from milestone 1.
+When $X_e$ goes below $0.99$ we will switch to Peebles' equation \eqref{eq:peebles}. This is a differential equation, so here we will use the same solver as in milestone1. This is a integration method, using the \textit{rkqs} integration scheme. There can be some numerical instability in the integrand, with the two exponents in \eqref{eq:beta2} and \eqref{eq:beta} causing some problems \footnote{Or at least I had some problems with them.}. To ensure that nothing goes wrong, we will combine them, so they become stable. Note that we will need to find $H$ for a given $x$, this is done with a function from milestone 1.
 
 From $X_e$ we can now use \eqref{eq:n_e} to get $n_e$. Later we will have to get values of $n_e$ for any values of $x$. Since we found $n_e$ for only $1000$ specific $x$-values, we need to spline $n_e$. This is done with an algorithm from \textit{Numerical Recipes}. 
 
@@ -155,10 +157,10 @@ In the period $z = 1400$ to $z = 800$ we see a sharp decrease in the fraction of
 \begin{figure}[!htb]
 \centering
 \includegraphics[scale=0.5]{tau.png}
-\caption{Optical depth $\tau$, and its derivatives, as a function of the logarithmic scale factor $x$. To get all the variables in the same plot, a logarithmic y-axis is used.}\label{fig:tau}
+\caption{Optical depth $\tau$, and its derivatives, as a function of the logarithmic scale factor $x$.}\label{fig:tau}
 \end{figure}
 
-Figure \ref{fig:tau} shows that the optical depth steady decreases due to the expansion of the Universe. But around $x\approx -7$, there is a sharp drop, which is not unlike the drop in $X_e$. Is, again, is the recombination. \todo{Write more (about the derivatives)}.
+Figure \ref{fig:tau} shows that the optical depth steady decreases due to the expansion of the Universe. But around $x\approx -7$, there is a sharp drop, which is not unlike the drop in $X_e$. Is, again, is the recombination. 
 
 \begin{figure}[!htb]
 \centering
@@ -168,16 +170,18 @@ Figure \ref{fig:tau} shows that the optical depth steady decreases due to the ex
 
 Figure \ref{fig:g} show the visibility function. Again we see that $\tilde{g}$, and its derivatives, are more or less constant throughout time, but around $x\approx -7$ there is a sudden change in all of the quantities. Once more indicating recombination.
 
+We can see that the above figures are the same as found by Callin \cite{callin}
+
 
 
 \section{Discussion and Conclusion}
-We have seen that for $X_e$, $\tau$ and $\tilde{g}$ there is something happening around $x\approx -7$. What is happening is that as the temperature in the Universe decreases, the primordial plasma and photons becomes colder. At a certain temperature the photons lacks the energy to tear the electrons and protons apart: Now they are free to recombine. Rapidly all the free electrons becomes apart of the neutral hydrogen atoms, leading $n_e$ to become smaller. This causes the rapid fall in the electron fraction $X_e$ we see in fig. \ref{fig:xe}.
+We have seen that for $X_e$, $\tau$ and $\tilde{g}$ there is something happening around $x\approx -7$. What is happening is that as the temperature in the Universe decreases, the primordial plasma and photons becomes colder. At a certain temperature the electrons and protons were able to form neutral hydrogen: They recombined. Rapidly all the free electrons becomes apart of the neutral hydrogen atoms, leading $n_e$ to become smaller. This causes the rapid fall in the electron fraction $X_e$ we see in fig. \ref{fig:xe}.
 
-In the earliest Universe, the photons and the free electrons are strongly interacting, meaning that a photon only travels for a short distance before being absorbed and scattered by an electron. This makes it impossible for the photon to travel freely, and the Universe is opaque. But as $X_e$ decreases, the photons becomes more free to travel further. This ability to travel freely is what the optical depth $\tau$ measures: the bigger $\tau$ is, the thicker the medium is, thus more opaque, meaning that the photons have a lower free mean path, and travels shorter before being absorbed or scattered. This is why we see the sudden, 5-fold decrease in $\tau$ near $x\approx -7$: As the density of free electron fall, the photons can travel more freely and the opaqueness decreases. Note that even before, and long after recombination, $\tau$ is decreasing. This is because the Universe is expanding, which lowers the density of electron.
+With the high density of free electrons in the early Universe, photons were unable to travel far due to their (Thomson) scattering with the free electrons, and the Universe was opaque. But as $X_e$ decreased, the photons became more free to travel further. This ability to travel freely is what the optical depth $\tau$ measures: the bigger $\tau$ is, the thicker the medium is, thus more opaque, meaning that the photons have a lower free mean path, and travels shorter before being absorbed or scattered. This is why we see the sudden, 5-fold decrease in $\tau$ near $x\approx -7$: As the density of free electron fall, the photons can travel more freely and the opaqueness decreases. Note that even before, and long after recombination, $\tau$ is decreasing. This is because the Universe is expanding, which lowers the density of electron.
 
-Finally, the visibility function describes the probability that given a observed photon, it was last scattered at $x$, with the probability $\tilde{g}(x)$. Before recombination the Universe was opaque, so we do not expect the photon to be from this epoch. After recombination the Universe is more or less empty at larger scales, so the photons won't scatter of anything. So we expect that the last time the photons scattered was as recombination happened -- to exaggerate: In one instance the photons scattered of a bunch of free electrons, and in the next instance, the Universe was empty --. This is known as the last scattering. Looking at fig. \ref{fig:g} we see that it is most likely that an observed photon was scattered at $x\approx -7$, which means, once again, that this is where recombination happened.
+Finally, the visibility function $\tilde{g}(x)$ describes the probability that an observed photon was last scattered at $x$. Before recombination the Universe was opaque, so we do not expect the photon to be from this epoch. After recombination the Universe is more or less empty at larger scales, so the photons won't scatter of anything. So we expect that the last time the photons scattered was as recombination happened -- to exaggerate: In one instance the photons scattered of a bunch of free electrons, and in the next instance, the Universe was empty --. Looking at fig. \ref{fig:g} we see that it is most likely that an observed photon was scattered at $x\approx -7$, which means, once again, that this is where recombination happened.
 
-So we now have continuous functions of $n_e$, $\tau$ and $\tilde{g}$ -- and their derivatives --, which will be used later when calculating the Einstein-Boltzmann equations. We also so that we could use these quantities to show that recombination happened around $x\approx -7$.
+So we now have continuous functions of $n_e$, $\tau$ and $\tilde{g}$ -- and the derivatives of the last two --, which will be used later when calculating the Einstein-Boltzmann equations. We also saw that we could use these quantities to show that recombination happened around $x\approx -7$ or $z \approx 1100$.
 
 
 \begin{thebibliography}{9}
