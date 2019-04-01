@@ -17,6 +17,11 @@ module rec_mod
 
 contains
 
+
+  ! ###################################################
+  ! Init subrouting. Calculates most of the quantities
+  ! ###################################################
+
   subroutine initialize_rec_mod
     implicit none
     
@@ -49,7 +54,6 @@ contains
     ! Task: Fill in x (rec) grid
     do i=1,n
       x_rec(i) = xstart + (i-1)*dx_rec
-      
     end do
 
 
@@ -57,26 +61,28 @@ contains
 
 
     ! Task: Compute X_e and n_e at all grid times
+
+    ! Variable holding whether to use saha or peebles.
     use_saha = .true.
+    
     do i = 1, n
       ! Used in both Saha and to calculate n_e
       n_H = (Omega_b*rho_c/(m_H*exp(3*x_rec(i))))
        
        if (use_saha) then
-          ! Use the Saha equation
 
           ! Computes the right and side of the equation
           T_b = T_0/exp(x_rec(i))
-          
           rhs =  (1.d0/(n_H)*((m_e*T_b*k_b)/(hbar*hbar*2.d0*PI_16))**(3.d0/2.d0)*exp(-epsilon_0/(T_b*k_b))) !1.d0/(1.d0/(Omega_b*rho_c/(m_H*exp(3.d0*x_rec(i))))*(m_e*(T_0*k_b/x_rec(i))/(2.d0*PI_16*hbar*hbar))**(3.d0/2.d0)*exp(-epsilon_0/(T_0*k_b/x_rec(i))))
 
-          !X_e(i) =   (-rhs+sqrt(rhs*rhs+4*rhs))/(2.0)
-          X_e(i) = -2.d0*rhs/(-rhs-sqrt(rhs*rhs + 4*rhs))
           
-
+          ! Citardauq formula
+          X_e(i) = -2.d0*rhs/(-rhs-sqrt(rhs*rhs + 4*rhs)) 
+          
+          !Checks if one should switch to peebles.
           if (X_e(i) < saha_limit) then 
             use_saha = .false.
-            Write(*,*) "Now starting to use Peebles at", x_rec(i)
+            Write(*,*) "Now starting to use Peebles' at", x_rec(i)
           end if
        else
           ! Use the Peebles equation
@@ -110,11 +116,15 @@ contains
     ! Task: Compute splined (log of) optical depth
     tau(n) = tau(n-1) ! Since tau(n) = 0, we will have problems with log
     call spline(x_rec,log(tau),1.d30,1.d30,tau2)
+
+
     ! Task: Compute splined second derivative of (log of) optical depth
     call spline(x_rec,tau2,1.d30,1.d30,tau22)
 
 
     ! Task: Compute splined visibility function
+
+    ! Integrates tau to get g
     do i = 1,n
       g(i) = -get_dtau(x_rec(i))*exp(-get_tau(x_rec(i)))
     end do
@@ -125,21 +135,19 @@ contains
     call spline(x_rec,g2,1.d30,1.d30,g22)
 
 
-
-
-    
-    
-
   end subroutine initialize_rec_mod
 
 
+  ! ##########################################################
+  ! Function for saving the quantities with higher resolution
+  ! ##########################################################
 
   subroutine write_rec_to_file
     implicit none
 
-    integer(i4b) :: i, n ! Defines the interation variable, and number of steps
-    real(dp)     :: x_0, x_start, x, dx, n_H
-    real(dp),    allocatable, dimension(:) ::  x_array
+    integer(i4b) :: i, n                                ! Defines the interation variable, and number of steps
+    real(dp)     :: x_0, x_start, x, dx, n_H            ! Boundary values and quatities needed to calculate things
+    real(dp),    allocatable, dimension(:) ::  x_array  ! Array holding x
 
 
     ! Gives values to variables
@@ -151,9 +159,7 @@ contains
     
 
     ! Allocates and filles array with x
-    
     allocate(x_array(n))
-    
     x_array = [(x_0 + dx*(i-1),i=1,n)]
 
 
@@ -169,13 +175,11 @@ contains
 
     
     
-    ! Loops over z and x, and writes the different fuctions to file
+    ! Loops over x, and writes the different fuctions to file
     do i = 1, n
 
       x = x_array(i)
       n_H = (Omega_b*rho_c/(m_H*exp(3*x)))
-
-
 
       Write(1,*) x, get_n_e(x)/n_H
       Write(2,*) x, get_tau(x)
@@ -187,6 +191,9 @@ contains
     end do
   end subroutine write_rec_to_file
 
+  ! ###################################################
+  ! Spline/splint functions to get continous quantities
+  ! ###################################################
 
   ! Task: Complete routine for computing n_e at arbitrary x, using precomputed information
   ! Hint: Remember to exponentiate...
@@ -238,7 +245,7 @@ contains
     real(dp)             :: get_ddtau
 
     log_ddtau = splint(x_rec,tau2,tau22,x)
-    get_ddtau = exp(log_ddtau)
+    get_ddtau = get_dtau(x)**2.d0/get_tau(x) + get_tau(x)*log_ddtau
 
   end function get_ddtau
 
@@ -274,6 +281,12 @@ contains
     get_ddg = splint(x_rec,g2,g22,x)
 
   end function get_ddg
+
+
+  ! ################################################
+  ! Function for dX_e/dx
+  ! ################################################
+
   ! Functions for getting the terms in the Peebles equation
 
   function get_dX(x,X_e)
@@ -286,7 +299,7 @@ contains
 
     real(dp)             :: Cr,lambda_a, n_1s, beta_2, beta, alpha_2, phi_2, T_b, n_H
 
-    ! May be unnecessary since it is defined in init
+    ! May be unnecessary since it is defined in init, (and in healpix)
     PI_16      = 4 * atan (1.0_16) ! Value of pi with double precition. 
 
     T_b = T_0/exp(x)
@@ -313,6 +326,9 @@ contains
 
     
 
+  ! ################################################
+  ! Subroutines for the integration subroutines
+  ! ################################################
 
 
 
