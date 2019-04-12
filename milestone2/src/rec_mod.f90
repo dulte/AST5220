@@ -245,6 +245,8 @@ contains
     real(dp)             :: get_ddtau
 
     log_ddtau = splint(x_rec,tau2,tau22,x)
+
+    ! Formula from getting from (log tau)'' to tau''
     get_ddtau = get_dtau(x)**2.d0/get_tau(x) + get_tau(x)*log_ddtau
 
   end function get_ddtau
