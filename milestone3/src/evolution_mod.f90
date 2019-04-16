@@ -189,7 +189,7 @@ contains
 
        write(*,*) "Integrating Rest"
 
-       dx1         = (x_tc - x_start_rec)/(n1)     ! Increment of x during rec
+       dx1         = (x_end_rec - x_tc)/(n1)     ! Increment of x during rec
        dx2         = (- x_end_rec)/(n2)  ! Increment of x after rec   
 
        !dt   = (-x_tc)/(n_t-1)
@@ -202,7 +202,7 @@ contains
         x_after(n1+i) = x_end_rec + (i)*dx2
        end do
 
-
+       
        do i = 1, n_t
           ! Task: Integrate equations from tight coupling to today
           
@@ -227,7 +227,8 @@ contains
           dTheta(i,:,k) = dydx(6:lmax_int)
           dPsi(i,k)     = -dydx(5) - (12.d0*H_0**2.d0)/(c*c*k_current*k_current*exp(2.d0*(x_after(i))))*(dydx(8)+1.d0/((x_after(i))*exp(x_after(i)))*y(8)) !Temp: Find out how to do this
        end do
-
+       
+       write(*,*) y
 
     end do
 
