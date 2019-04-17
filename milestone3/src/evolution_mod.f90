@@ -10,7 +10,7 @@ module evolution_mod
   real(dp),     parameter, private :: a_init   = 1.d-8
   real(dp),     parameter, private :: k_min    = 0.1d0 * H_0 / c
   real(dp),     parameter, private :: k_max    = 1.d3  * H_0 / c
-  integer(i4b), parameter          :: n_k      = 100
+  integer(i4b), parameter          :: n_k      = 6
   integer(i4b), parameter          :: n_before = 1000
   integer(i4b), parameter, private :: lmax_int = 6
 
@@ -78,23 +78,40 @@ contains
     ! Task: Initialize k-grid, ks; quadratic between k_min and k_max
     allocate(ks(n_k))
     ks = [(k_min + ((k_max-k_min)/(n_k-1))*(i-1),i=1,n_k)]
-    
+    ks(1) = 1.d0 * H_0 / c
+    ks(2) = 8.36 * H_0 / c
+    ks(3) = 85.9 * H_0 / c
+    ks(4) = 245.1 * H_0 / c
+    ks(5) = 636.8 * H_0 / c
+    ks(6) = 1.d3 * H_0 / c
+
 
     ! Allocate arrays for perturbation quantities
-    allocate(Theta(0:n_t, 0:lmax_int, n_k))
-    allocate(delta(0:n_t, n_k))
-    allocate(delta_b(0:n_t, n_k))
-    allocate(v(0:n_t, n_k))
-    allocate(v_b(0:n_t, n_k))
-    allocate(Phi(0:n_t, n_k))
-    allocate(Psi(0:n_t, n_k))
-    allocate(dPhi(0:n_t, n_k))
-    allocate(dPsi(0:n_t, n_k))
-    allocate(dv_b(0:n_t, n_k))
-    allocate(dTheta(0:n_t, 0:lmax_int, n_k))
+    allocate(Theta(0:n_t+n_before, 0:lmax_int, n_k))
+    allocate(delta(0:n_t+n_before, n_k))
+    allocate(delta_b(0:n_t+n_before, n_k))
+    allocate(v(0:n_t+n_before, n_k))
+    allocate(v_b(0:n_t+n_before, n_k))
+    allocate(Phi(0:n_t+n_before, n_k))
+    allocate(Psi(0:n_t+n_before, n_k))
+    allocate(dPhi(0:n_t+n_before, n_k))
+    allocate(dPsi(0:n_t+n_before, n_k))
+    allocate(dv_b(0:n_t+n_before, n_k))
+    allocate(dTheta(0:n_t+n_before, 0:lmax_int, n_k))
 
     ! Allocates array for x
-    allocate(x(0:n_t))
+    allocate(x(0:n_t+n_before))
+
+
+    ! Open files for writing
+    open(1,file='output/milestone3/x_modes.dat')
+    open(2,file='output/milestone3/v.dat')
+    open(3,file='output/milestone3/v_b.dat')
+    open(4,file='output/milestone3/delta.dat')
+    open(5,file='output/milestone3/delta_b.dat')
+    open(6,file='output/milestone3/Phi.dat')
+    open(7,file='output/milestone3/Theta.dat')
+    open(8,file='output/milestone3/k.dat')
 
 
     ! Task: Set up initial conditions for the Boltzmann and Einstein equations
@@ -122,7 +139,7 @@ contains
     real(dp)     :: x1, x2, x_init
     real(dp)     :: eps, hmin, h1, x_tc, H_p, dt, t1, t2
 
-    real(dp)     :: x_start_rec, x_end_rec, dx1, dx2
+    real(dp)     :: x_start_rec, x_end_rec, dx1, dx2, dx
     integer(i4b) :: n1, n2
 
     real(dp), allocatable, dimension(:) :: y, y_tight_coupling, dydx
@@ -136,11 +153,27 @@ contains
     n1          = 200                       ! Number of grid points during recombination
     n2          = 300                       ! Number of grid points after recombination
 
+    x_start_rec = -log(1.d0 + 1630.4d0)  ! x of start of recombination
     x_end_rec   = -log(1.d0 + 614.2d0)    ! x of end of recombination
     
-
+    dx1         = (x_end_rec - x_start_rec)/(n1+1)     ! Increment of x during rec
+    dx2         = (- x_end_rec)/(n2+1)  ! Increment of x after rec 
+    dx          = (x_start_rec - x_init)/(n_before) 
     
+    do i = 0, n_before
+      x(i) = x_init + dx*i
+    end do
 
+    !dt   = (-x_tc)/(n_t-1)
+    do i = 1, n1
+      x(n_before + i) = x_start_rec + dx1*(i+1)
+    end do
+
+    ! Fills the x_t array with values after recombination
+    do i = 1, n2
+      x(n1+n_before+i) = x_end_rec + (i+1)*dx2
+    end do
+    
     allocate(y(npar))
     allocate(dydx(npar))
     allocate(y_tight_coupling(7))
@@ -150,10 +183,18 @@ contains
     ! Propagate each k-mode independently
     do k = 1, n_k
 
-       write(*,*) "Starting to Integrate mode ", k
+       write(*,*) "Starting to Integrate mode ", k, ". With k = ", ks(k)/(H_0/c)
 
        k_current = ks(k)  ! Store k_current as a global module variable
        h1        = 1.d-5
+
+
+       ! Find the time to which tight coupling is assumed, 
+       ! and integrate equations to that time
+       x_tc = get_tight_coupling_time(k_current)
+       write(*,*) "x_tc", x_tc
+
+
 
        ! Initialize equation set for tight coupling
        y_tight_coupling(1) = delta(0,k)
@@ -163,50 +204,54 @@ contains
        y_tight_coupling(5) = Phi(0,k)
        y_tight_coupling(6) = Theta(0,0,k)
        y_tight_coupling(7) = Theta(0,1,k)
-       
-       ! Find the time to which tight coupling is assumed, 
-       ! and integrate equations to that time
-       x_tc = get_tight_coupling_time(k_current)
-       write(*,*) "x_tc", x_tc
 
-       x_before_tc = [(x_init + (i-1)*(x_tc-x_init)/(1000.d0-1.d0),i=1,n_before)]
+
+       y(1) = delta(0,k)
+       y(2) = delta_b(0,k)
+       y(3) = v(0,k)
+       y(4) = v_b(0,k)
+       y(5) = Phi(0,k)
+       y(6) = Theta(0,0,k)
+       y(7) = Theta(0,1,k)
+       
+       do i = 1, n_t+n_before
+
+       !x_before_tc = [(x_init + (i-1)*(x_tc-x_init)/(1000.d0-1.d0),i=1,n_before)]
        
 
        ! Task: Integrate from x_init until the end of tight coupling, using
        !       the tight coupling equations
-       write(*,*) "Integrating over tight coupling"
-       do i=2,n_before
-        call odeint(y_tight_coupling, x_before_tc(i-1), x_before_tc(i), eps, h1, hmin, derivs_tight_coupling, bsstep, output) 
-       end do
+       !write(*,*) "Integrating over tight coupling"
 
-       ! Task: Set up variables for integration from the end of tight coupling 
-       ! until today
-       y(1:7) = y_tight_coupling
-       y(8)   = -(20.d0*c*k_current)/(45.d0*get_H_p(x_tc)*get_dtau(x_tc))*y_tight_coupling(7)
-       do l = 3, lmax_int
-          y(6+l) = -l/(2.d0*l + 1.d0)*c*k_current/(get_H_p(x_tc)*get_dtau(x_tc))*y(6+l-1)
-       end do
+        if (x(i) <= x_tc)then
+          !do i=2,n_before
+            !call odeint(y_tight_coupling, x_before_tc(i-1), x_before_tc(i), eps, h1, hmin, derivs_tight_coupling, bsstep, output) 
+          !end do
+          y_tight_coupling = y(1:7) 
+          !write(*,*) y_tight_coupling
+          call odeint(y_tight_coupling, x(i-1), x(i), eps, h1, hmin, derivs_tight_coupling, bsstep, output) 
 
-       write(*,*) "Integrating Rest"
+          ! Task: Set up variables for integration from the end of tight coupling 
+          ! until today
+          y(1:7) = y_tight_coupling
+          y(8)   = -(20.d0*c*k_current)/(45.d0*get_H_p(x(i))*get_dtau(x(i)))*y_tight_coupling(7)
+          do l = 3, lmax_int
+              y(6+l) = -l/(2.d0*l + 1.d0)*c*k_current/(get_H_p(x(i))*get_dtau(x(i)))*y(6+l-1)
+          end do
 
-       dx1         = (x_end_rec - x_tc)/(n1)     ! Increment of x during rec
-       dx2         = (- x_end_rec)/(n2)  ! Increment of x after rec   
-
-       !dt   = (-x_tc)/(n_t-1)
-       do i = 0, n1
-        x_after(i) = x_tc + dx1*(i)
-       end do
-
-        ! Fills the x_t array with values after recombination
-       do i = 0, n2
-        x_after(n1+i) = x_end_rec + (i)*dx2
-       end do
-
-       
-       do i = 1, n_t
-          ! Task: Integrate equations from tight coupling to today
           
-          call odeint(y, x_after(i-1), x_after(i),  eps, h1, hmin, derivs_after_decoupling, bsstep, output) 
+
+          else
+            !write(*,*) "Integrating Rest"
+          
+          !do i = 1, n_t
+              ! Task: Integrate equations from tight coupling to today
+              
+              !call odeint(y, x_after(i-1), x_after(i),  eps, h1, hmin, derivs_after_decoupling, bsstep, output) 
+            call odeint(y, x(i-1), x(i),  eps, h1, hmin, derivs_after_decoupling, bsstep, output) 
+
+      end if
+      !write(*,*) y
           ! Task: Store variables at time step i in global variables
           delta(i,k)   = y(1)
           delta_b(i,k) = y(2)
@@ -216,21 +261,38 @@ contains
           do l = 0, lmax_int
              Theta(i,l,k) = y(6+l)
           end do
-          Psi(i,k)     = -y(5) - (12.d0*H_0**2.d0)/(c*c*k_current*k_current*exp(2.d0*(x_after(i))))*omega_r*y(8) !Temp: May have to use evolving version of Omega_r
+          Psi(i,k)     = -y(5) - (12.d0*H_0**2.d0)/(c*c*k_current*k_current*exp(2.d0*x(i)))*omega_r*y(8) !Temp: May have to use evolving version of Omega_r
 
           ! Task: Store derivatives that are required for C_l estimation
 
-          call derivs_after_decoupling(x_after(i),y,dydx)
+          call derivs_after_decoupling(x(i),y,dydx)
 
           dPhi(i,k)     = dydx(5)
           dv_b(i,k)     = dydx(4)
           dTheta(i,:,k) = dydx(6:lmax_int)
-          dPsi(i,k)     = -dydx(5) - (12.d0*H_0**2.d0)/(c*c*k_current*k_current*exp(2.d0*(x_after(i))))*(dydx(8)+1.d0/((x_after(i))*exp(x_after(i)))*y(8)) !Temp: Find out how to do this
+          dPsi(i,k)     = -dydx(5) - (12.d0*H_0**2.d0)/(c*c*k_current*k_current*exp(2.d0*(x(i))))*(dydx(8)+1.d0/((x(i))*exp(x(i)))*y(8)) !Temp: Find out how to do this
+
+        
+
+        
        end do
+
        
-       write(*,*) y
 
     end do
+
+
+    ! Writes to array
+
+    write(1,*) x
+    write(2,*) v
+    write(3,*) v_b
+    write(4,*) delta
+    write(5,*) delta_b
+    write(6,*) Phi
+    write(7,*) Theta
+    write(8,*) ks/(H_0/c)
+
 
     deallocate(y_tight_coupling)
     deallocate(y)
@@ -246,24 +308,34 @@ contains
     implicit none
 
     real(dp), intent(in)  :: k
-    real(dp)              :: get_tight_coupling_time, x_init, x_end, dx, x
+    real(dp)              :: get_tight_coupling_time, x_init, x_end, dx!, x
     integer(i4b)          :: n, i
 
     ! Bruk (den ubrukte) x-array fra time_mod
-    n       = 1000
-    x_init  = log(1.d-15)
-    x_end   = -7.4*0
-    dx      = (x_end-x_init)/(n-1)
+    !n       = 1000
+    !x_init  = log(1.d-15)
+    x_end   = -log(1.d0 + 1630.4d0)
+    !dx      = (x_end-x_init)/(n-1)
     get_tight_coupling_time = -7.4  !Default value
-    do i =1, n 
-      x = x_init + dx*(i-1)
-      if (abs(get_dtau(x))<10) then 
-        get_tight_coupling_time = x
+
+    
+
+    do i =0, n_before+n_t
+      !x = x_init + dx*(i-1)
+
+      if (abs(get_dtau(x(i)))<10) then 
+        get_tight_coupling_time = x(i)
         exit
       end if
 
-      if (abs((c*k_current)/(get_H_p(x)*get_dtau(x))) > 0.1) then
-        get_tight_coupling_time = x
+      if (abs((c*k_current)/(get_H_p(x(i))*get_dtau(x(i)))) > 0.1) then
+        get_tight_coupling_time = x(i)
+        exit
+      end if
+
+
+      if (x(i)>x_end) then
+        get_tight_coupling_time = x_end
         exit
       end if
 
