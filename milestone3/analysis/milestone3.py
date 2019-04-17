@@ -23,7 +23,7 @@ if __name__ == "__main__":
     output_path = "../output/"
     report_path = "../report/"
 
-    v = 1.5*read_file(output_path+"Phi.dat")
+    v = read_file(output_path+"Phi.dat")
     x = read_file(output_path+"x_modes.dat")
 
     modes = int((len(v)/len(x)))

@@ -116,17 +116,17 @@ contains
 
     ! Task: Set up initial conditions for the Boltzmann and Einstein equations
     Phi(0,:)     = 1.d0
-    delta(0,:)   = 1.5*Phi(0,0)
-    delta_b(0,:) = 1.5*Phi(0,0)
+    delta(0,:)   = 1.5*Phi(0,1)
+    delta_b(0,:) = 1.5*Phi(0,1)
        
     do i = 1, n_k
-       v(0,i)       = (c*ks(i))/(get_H_p(log(a_init))*2.d0)*Phi(0,0)
-       v_b(0,i)     = (c*ks(i))/(get_H_p(log(a_init))*2.d0)*Phi(0,0)
-       Theta(0,0,i) = 0.5*Phi(0,0)
-       Theta(0,1,i) = -(c*ks(i))/(get_H_p(log(a_init))*6.d0)*Phi(0,0)
+       v(0,i)       = (c*ks(i))/(get_H_p(log(a_init))*2.d0)*Phi(0,1)
+       v_b(0,i)     = (c*ks(i))/(get_H_p(log(a_init))*2.d0)*Phi(0,1)
+       Theta(0,0,i) = 0.5*Phi(0,1)
+       Theta(0,1,i) = -(c*ks(i))/(get_H_p(log(a_init))*6.d0)*Phi(0,1)
        Theta(0,2,i) = -(20.d0*c*ks(i))/(get_H_p(log(a_init))*45.d0*get_dtau(log(a_init)))*Theta(0,1,i)
        do l = 3, lmax_int
-          Theta(0,l,i) = -l/(2.d0*l + 1)*(c*ks(i))/(get_H_p(log(a_init))*get_dtau(log(a_init)))*Theta(0,l-1,i)
+          Theta(0,l,i) = -l/(2.d0*l + 1.d0)*(c*ks(i))/(get_H_p(log(a_init))*get_dtau(log(a_init)))*Theta(0,l-1,i)
        end do
     end do
 
