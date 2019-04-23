@@ -78,7 +78,7 @@ contains
     ! Task: Initialize k-grid, ks; quadratic between k_min and k_max
     allocate(ks(n_k))
     ks = [(k_min + ((k_max-k_min)/(n_k-1))*(i-1),i=1,n_k)]
-    ks(1) = 1.d0 * H_0 / c
+    ks(1) = 0.1 * H_0 / c
     ks(2) = 8.36 * H_0 / c
     ks(3) = 85.9 * H_0 / c
     ks(4) = 245.1 * H_0 / c

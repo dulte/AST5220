@@ -20,9 +20,9 @@ def read_file(name):
 def plot_quantity(y,x,k,nb_modes,title,xlab,ylab,name="",save=False,log_axis=False):
     for i in range(nb_modes):
         if log_axis:
-            plt.semilogy(x,y[i],label=r"%.1f $H_c /c $"%k[i])    
+            plt.semilogy(x,y[i],label=r"%.1f $c /H_0$"%k[i])    
         else:
-            plt.plot(x,y[i],label=r"%.1f $H_c /c $"%k[i])
+            plt.plot(x,y[i],label=r"%.1f $c /H_0$"%k[i])
 
     plt.title(title)
     plt.xlabel(xlab)
@@ -88,6 +88,7 @@ if __name__ == "__main__":
     plot_quantity(v_b,x,k,nb_modes,r"$v_b$ for different modes of k","x",r"$v_b$")
 
     plot_quantity(theta[:,0],x,k,nb_modes,r"$\Theta_0$ for different modes of k","x",r"$\Theta_0$")
+    plot_quantity(theta[:,1],x,k,nb_modes,r"$\Theta_1$ for different modes of k","x",r"$\Theta_1$")
 
 
 
