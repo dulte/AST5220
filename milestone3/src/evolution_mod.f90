@@ -146,8 +146,16 @@ contains
 
     real(dp), allocatable, dimension(:) :: y, y_tight_coupling, dydx
     real(dp), allocatable, dimension(:) :: x_before_tc,x_after
+  
 
 
+    ! #########################################
+    ! This part differs from the skeleton,
+    ! since I've defined the x array to go
+    ! from the initial time until now, but
+    ! with different step sizes for the
+    ! different eras!
+    ! #########################################
     x_init = log(a_init)
     eps    = 1.d-5
     hmin   = 0.d0
@@ -185,6 +193,11 @@ contains
     allocate(x_before_tc(1000))
     allocate(x_after(0:n_t))
 
+
+    ! ################################
+    ! Start of integration
+    ! ################################
+
     ! Propagate each k-mode independently
     do k = 1, n_k
 
@@ -201,17 +214,6 @@ contains
        write(*,*) "x_tc =", x_tc
 
 
-
-       ! Initialize equation set for tight coupling
-      !  y_tight_coupling(1) = delta(0,k)
-      !  y_tight_coupling(2) = delta_b(0,k)
-      !  y_tight_coupling(3) = v(0,k)
-      !  y_tight_coupling(4) = v_b(0,k)
-      !  y_tight_coupling(5) = Phi(0,k)
-      !  y_tight_coupling(6) = Theta(0,0,k)
-      !  y_tight_coupling(7) = Theta(0,1,k)
-
-
        y(1) = delta(0,k)
        y(2) = delta_b(0,k)
        y(3) = v(0,k)
@@ -223,16 +225,13 @@ contains
 
        write(*,*) "Integrating Tight Decoupling"
        
+       ! Integration during tight coupling
        do i = 1, index_tc
 
        
-       ! Task: Integrate from x_init until the end of tight coupling, using
-       !       the tight coupling equations
           
           call odeint(y(1:7), x(i-1), x(i), eps, h1, hmin, derivs_tight_coupling, bsstep, output) 
 
-          ! Task: Set up variables for integration from the end of tight coupling 
-          ! until today
  
           y(8)   = -(20.d0*c*k_current)/(45.d0*get_H_p(x(i))*get_dtau(x(i)))*y(7)
           do l = 3, lmax_int
@@ -244,7 +243,7 @@ contains
         end do
         
         write(*,*) "Integrating Rest"
-
+        ! Integration after tight coupling
         do i = index_tc +1, n_t + n_before
         
           call odeint(y, x(i-1), x(i),  eps, h1, hmin, derivs_after_decoupling, bsstep, output) 
@@ -280,6 +279,13 @@ contains
   ! Task: Complete the following routine, such that it returns the time at which
   !       tight coupling ends. In this project, we define this as either when
   !       dtau < 10 or c*k/(H_p*dtau) > 0.1 or x > x(start of recombination)
+
+
+  ! ######################################
+  ! Function for finding where tight 
+  ! coupling ends. This returns both
+  ! the x value and index where it happens
+  ! ######################################
   function get_tight_coupling_time(k,index)
     implicit none
 
