@@ -139,7 +139,11 @@ So when will we use the tight coupling functions. We are going to define tight c
 \section{Method}
 Having the differential equations and initial values we can now begin to integrate. We want to integrate the equations from $x = \ln a_{init} = \ln 10^{-8}$ until today, where $x_0 = 0$. Since we know that different eras are more sensitive to numerical instability, we will make a x-grid with different step sizes. Before recombination we will have $1000$ grid points, during recombination we will use $200$ grid points, and $300$ grid points between the end of recombination and now. 
 
-Since all the Fourier modes are independent, we can integrate them one by one. For this report only six such modes are used: $k = 0.1, 8.4, 85.9, 245.1, 636.8, 1000 c/H_0$. This is to demonstrate the physics at different scales.  
+Since all the Fourier modes are independent, we can integrate them one by one. For this report only six such modes are used: $k = 0.1, 8.4, 85.9, 245.1, 636.8, 1000 c/H_0$\footnote{This choice was made so that it was possible to use the plots, published by the lecturer last year, as sanity checks.}. This is to demonstrate the physics at different scales. For the last milestone this will changed to $100$ values of $k$, distributed as given in Callin \todo{Ref callin}
+
+\begin{equation}
+k_i = k_{min} + (k_{max}-k_{min})\cdot\left(\frac{i}{100}\right)^2.
+\end{equation}
 
 For each $k$ we start by finding at which value of $x$ tight coupling ends. We then use the the equations found in sec. \ref{sec:tight} during the integration. Note that only $\Theta_0$ and $\Theta_1$ are integrated here, the rest of the momenta are just algebraic expressions. When tight coupling is over, we can instead start to use the differential equations from sec. \ref{sec:normal}. 
 
@@ -149,17 +153,20 @@ Since the $x$ value of the end of tight coupling is different for each $k$, this
 
 \todo{The method seems short, but I do not know what else to write.}
 
-\section{Results}
+\section{Results and Discussion}
+
+
+
 
 \begin{figure*}[!htbp]
 \centering
 \begin{tabular}{@{}ccc@{}}
-\subfloat[Survival function for the different treatments. We see that there is some difference, with patients treated with the placebo having lower survival during most of the study. But the difference is very small.\label{fig:delta}]{\includegraphics[width=0.5\textwidth]{delta.png}} & 
-\subfloat[The figure shows that the survival for male patients are smaller than that for the female patients. The difference is not large, and may not be significant.\label{fig:delta_b}]{\includegraphics[width=0.5\textwidth]{delta_b.png}} \\
-\subfloat[The figure shows that there is a large difference in the survival based on the severity of the ascites of the patient at the start of the observation. The more fluid the patient has, the lower the survival.\label{fig:v}]{\includegraphics[width=0.5\textwidth]{v.png}} &
-\subfloat[The figure shows that the age plays a important role in the survival, with older patients surviving shorter than the younger ones.\label{fig:v_b}]{\includegraphics[width=0.5\textwidth]{v_b.png}} 
+\subfloat[This shows the evolution of the pertibutions of the dark matter.  We can see that all the modes are constant before entering the horizon. After entering the horizon all the modes will grow. \label{fig:delta}]{\includegraphics[width=0.5\textwidth]{delta.png}} & 
+\subfloat[This shows the evolution of the pertibutions of the bayonic matter.  We can see that all the modes are constant before entering the horizon. Modes entering the before recombination will oscillate. These modes, and the modes entering after recombination, will start to grow after recombination.\label{fig:delta_b}]{\includegraphics[width=0.5\textwidth]{delta_b.png}} \\
+\subfloat[Velocity of dark matter. The velocity will more or less follow the growth in the dark matter perturbations.\label{fig:v}]{\includegraphics[width=0.5\textwidth]{v.png}} &
+\subfloat[Velocity of baryonic matter. The velocity will more or less follow the growth in the baryonic matter perturbations\label{fig:v_b}]{\includegraphics[width=0.5\textwidth]{v_b.png}} 
 \end{tabular}
-\caption[]{Four figure showing the estimated survival function for different groups.}
+\caption[]{Plots showing the growth of the perturbations and the velocity of dark and baryonic matter. The different colors correspond to different modes, with higher values of $k$ corresponding to smaller scales.}
 \label{fig:delta_v}
 \end{figure*}
 
@@ -167,19 +174,38 @@ Since the $x$ value of the end of tight coupling is different for each $k$, this
 \begin{figure*}[!htbp]
 \centering
 \begin{tabular}{@{}ccc@{}}
-\subfloat[Survival function for the different treatments. We see that there is some difference, with patients treated with the placebo having lower survival during most of the study. But the difference is very small.\label{fig:Psi}]{\includegraphics[width=0.5\textwidth]{Phi.png}} & 
-\subfloat[The figure shows that the survival for male patients are smaller than that for the female patients. The difference is not large, and may not be significant.\label{fig:Psi}]{\includegraphics[width=0.5\textwidth]{Psi.png}} 
+\subfloat[The gravitational curvature $\Phi$. As with the matter perturbations, before entering the horizon, the modes are constant. The three larges modes (corresponding to smalles scales) will enter the horizon during radiation domination, rapidly decay before starting to oscillate. The oscillation will be dampend, and (after the start of matter domination) the potential will become constant. The smallest modes will enter after radiation-matter equvalence, during which they will fall a bit and stay constant. Near present age, dark energy starts to dominate, and $\Phi$ starts to decrease.\label{fig:Phi}]{\includegraphics[width=0.5\textwidth]{Phi.png}} & 
+\subfloat[The Newtonian potential $\Psi$. This growth more or less the same as $\Phi$ decreses. We can approximate that $\Psi = - \Phi$.\label{fig:Psi}]{\includegraphics[width=0.5\textwidth]{Psi.png}} 
 \end{tabular}
-\caption[]{Four figure showing the estimated survival function for different groups.}
+\caption[]{Plots showing the growth of the two gravitational potentials/perturbations. The different colors correspond to different modes, with higher values of $k$ corresponding to smaller scales.}
 \label{fig:psi_phi}
 \end{figure*}
 
 
-\begin{figure}
+
+\begin{figure}[!htbp]
 \centering
 \includegraphics[scale=0.5]{Theta_0.png}
-\caption{•}\label{fig:theta}
+\caption{Growth of the zeroth momentum of the temperature for different modes. As modes enter the horizon, they will start to clump \todo[inline]{Use another word than clump} together will baryonic matter, and oscillate. These oscillations are dampend and will start to die out.}\label{fig:theta}
 \end{figure}
+
+
+
+
+We'll start by looking at how the perturbations of matter evolves. If we look at fig. \ref{fig:delta} we see the perturbation of dark matter. Before a given mode has entered the horizon, it stays constant. There are two different eras a mode can enter the horizon: During radiation domination or during matter domination. The change from radiation to matter domination happens around $x\approx -9$\todo{Check if correct!}. If a dark matter perturbation enters the horizon before this time, they will first start to grow, before being suppressed. This is what we can see in the figure for the largest values of $k$, which corresponds to the smallest scales -- those who will enter the horizon first. This suppression is a logarithmic growth. After matter starts to dominate, the suppression ends, and the growth will go as $\delta \propto a$. Larger scales (smaller $k$) will enter the horizon after the radiation domination, and will not be suppressed. They will instead always grow as $\delta \propto a$. \textit{Always} is of course a misnomer, since near present age dark energy will start to dominate. Things will then start to be pulled apart, making the perturbation of all modes start to deaccelerate. \todo{Check if dark energy actually have an impact on out simulation!}
+
+If we now look at the perturbations of baryonic matter, fig. \ref{fig:delta_b}, we see that the evolution shares many of the same characteristics, but upto $x \approx -7$ there are oscillations in the perturbation -- this again only applies to the small scale modes who have entered into the horizon by this time. This is due to the fact the the baryons are tightly couples to the photons, and thus we have a photon-baryon fluid. As this fluid falls into the dark matter gravity well, the radiation pressure will push the fluid apart, decreasing the perturbation. The pressure then decrease, and the fluid can collapse again. This happens over and over again, thus resulting in an oscillation. After recombination the baryons will no longer be affected by the radiation pressure, and are able to collapse. They will now collapse all on their own, but will fall into the gravitational wells made by the dark matter. This is why the perturbations for baryonic and dark matter evolves similarly after $x\approx -5$. The larger scale mode, who enters the horizon later will not have this oscillation, but will fall right into the gravity wells of the dark matter. We see the same slowing of growth near present age as we saw with dark matter.
+
+The velocities of the dark and baryonic matter follows the perturbations. As a perturbation grows larger, the matter will fall faster, and vice versa. It is especially noticeable that during the oscillation of the baryons, their velocity oscillates as well. 
+
+We can so look at the gravitational curvature $\Phi$ and Newtonian gravitational potential $\Psi$ in fig. \ref{fig:psi_phi}. Beginning with $\Phi$, fig. \ref{fig:Phi}, we see that, once again, the all the modes are constant before entering the horizon. The modes corresponding to the smallest scales will enter the horizon during radiation domination, and decay rapidly. They will so start to oscillate, as the photon-baryon fluid starts to oscillates. As the Universe becomes matter dominated, more specific dark matter dominated, $\Phi$ becomes determined more by the dark matter perturbations than by the photons. This means that the oscillation die out, since there are no oscillations in dark matter. Notice that the suppression in the growth of dark matter corresponds well with these oscillations: As the $\Phi$ stops decreasing, dark matter tends to clump together less, and the perturbation slows their growth \todo{Check if this is correct. And rewrite or remove completely!}. We see that modes entering the horizon later will not oscillate as many times, before recombination ends and all oscillations stops. For the largest scaled modes, they do not enter before after radiation domination. One can show that if a modes haven't entered the horizon before the age of radiation-matter equivalence, they will decrease by a factor $9/10$. During matter domination all modes will become constant, independently of when they entered the horizon. Again notice that as dark energy starts to dominate, $\Phi$ decreases.
+
+$\Psi$ look more or less the same as $\Phi$, but where $\Phi$ decreases, $\Psi$ increases. A good approximation for $\Psi$ is $\Psi = - \Phi$.
+
+The last figure, fig. \ref{fig:theta}, is of the zeroth momentum of the temperature $\Theta_0$. Again: All modes are constant before entering the horizon. We can see that when small scale modes grow when first entering the horizon, but as with $\Phi$ and $\delta_b$ they begin to oscillate. This is due to the gravitation and pressure of the photon-baryon fluid competing. After recombination the photons no longer are able to collapse with the baryons, and as the oscillations die out, the temperature perturbations become constant.
+
+
+
 
 \todo[inline]{Notes: As Psi crosses $a_eq$ the transfer function decreases the Psi that have not crossed the horizon to 9/10. If Psi crosses the horizon in the matter dominated regime, it stays constant. This is no longer the case when dark energy takes over, thus the dip in the end (described by the growth function). Growth function is independent of $k$, and is very small in dark energy dom., and we therefore see that perturbations flattens out near $x=0$.
 
@@ -196,6 +222,15 @@ Due to pressure of
 
 
 The oscillations in baryon plots are acoustic oscillations. This is because with only baryons, the perturbations goes as a cosine (from extra galactic)}
+
+
+
+\section{Conclusion}
+We have now solved the Einstein-Boltzmann equations for different modes $k$. We have also been able to use what we know about physics to interpret the different behaviours of the different quantities and modes. 
+
+\todo{Maybe recap some of the results?}
+
+We can therefore soon reap the rewards of all our hard work, and calculate the CMB power spectrum!
 
 \end{document}
 
