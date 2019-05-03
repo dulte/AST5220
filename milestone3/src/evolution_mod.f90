@@ -11,6 +11,7 @@ module evolution_mod
   real(dp),     parameter, private :: k_min    = 0.1d0 * H_0 / c
   real(dp),     parameter, private :: k_max    = 1.d3  * H_0 / c
   integer(i4b), parameter          :: n_k      = 6
+  integer(i4b), parameter          :: n_k      = 100
   integer(i4b), parameter          :: n_before = 1000             !Number of points before recombination
   integer(i4b), parameter, private :: lmax_int = 6
 
@@ -84,6 +85,8 @@ contains
     ks(4) = 245.1 * H_0 / c
     ks(5) = 636.8 * H_0 / c
     ks(6) = 1.d3 * H_0 / c
+    ks = [(k_min + (k_max-k_min)*(float(i-1)/float(n_k-1))**2.d0,i=1,n_k)]
+    
 
 
     ! Allocate arrays for perturbation quantities
