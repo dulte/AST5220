@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
-#import seaborn as sns
+import seaborn as sns
 
-#sns.set_style("darkgrid")
-#sns.set_context("talk")
+sns.set_style("darkgrid")
+sns.set_context("talk")
 
 def read_file(name):
     y = []
@@ -20,9 +20,9 @@ def read_file(name):
 def plot_quantity(y,x,k,nb_modes,title,xlab,ylab,name="",save=False,log_axis=False):
     for i in range(nb_modes):
         if log_axis:
-            plt.semilogy(x,y[i],label=r"%.1f $c /H_0$"%k[i])    
+            plt.semilogy(x,y[i],label=r"$kc /H_0$ = %.1f"%k[i])    
         else:
-            plt.plot(x,y[i],label=r"%.1f $c /H_0$"%k[i])
+            plt.plot(x,y[i],label=r"$kc /H_0$ = %.1f"%k[i])
 
     plt.title(title)
     plt.xlabel(xlab)
@@ -88,7 +88,3 @@ if __name__ == "__main__":
     plot_quantity(v_b,x,k,nb_modes,r"$v_b$ for different modes of k","x",r"$v_b$")
 
     plot_quantity(theta[:,0],x,k,nb_modes,r"$\Theta_0$ for different modes of k","x",r"$\Theta_0$")
-    plot_quantity(theta[:,1],x,k,nb_modes,r"$\Theta_1$ for different modes of k","x",r"$\Theta_1$")
-
-
-
