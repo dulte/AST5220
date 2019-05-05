@@ -86,7 +86,7 @@ v_b' = -v_b - \frac{ck}{\mathcal{H}}\Psi + \tau' R(3\Theta_1 + v_b),
 \begin{equation}
 R = \frac{4\Omega_r}{3\Omega_b a}.
 \end{equation}
-All of the above equations are in Fourier space, with wave number $k$. This means that we can look at how the perturbations at different Fourier modes evolve (independently), which corresponds to different scales with $\lambda \propto k^{-1}$. We now have the differential equations we need to integrate, but to be able to do that we need initial conditions. We will start our integration a long time ago, when the particle horizon was extremely small compared to all modes $k$, which means $k\eta << 1$. With this it is possible to get initial conditions as functions of $\Phi$
+Here $' = d/dx$. All of the above equations are in Fourier space, with wave number $k$. This means that we can look at how the perturbations at different Fourier modes evolve (independently), which corresponds to different scales with $\lambda \propto k^{-1}$. We now have the differential equations we need to integrate, but to be able to do that we need initial conditions. We will start our integration a long time ago, when the particle horizon was extremely small compared to all modes $k$, which means $k\eta << 1$. With this it is possible to get initial conditions as functions of $\Phi$
 \begin{equation}
 \Phi = 1,
 \end{equation}
@@ -108,10 +108,11 @@ v = v_b = \frac{ck}{2\mathcal{H}}\Phi,
 \begin{equation}
 \Theta_l = -\frac{l}{2l+1}\frac{ck}{\mathcal{H}\tau'}\Theta_{l-1}.
 \end{equation}
-Just setting $\Phi = 1$ may seem odd, but we are through inflation only able to get the initial power spectrum of $\Phi$. But thankfully we do not need to worry about that before after we have integrated. We can, in other word, just set the initial value of $\Phi$ as we wish, integrate everything and then multiply by the power spectrum of $\Phi$ after the integration. This gives the same result as if we would have gotten if we just the power spectrum as the initial value. 
+Just setting $\Phi = 1$ may seem odd, but we are through inflation only able to get the initial power spectrum of $\Phi$. But thankfully we do not need to worry about that before after we have integrated. We can, in other word, just set the initial value of $\Phi$ as we wish, integrate everything and then multiply by the power spectrum of $\Phi$ after the integration. This gives the same result as if we would have gotten if we just the power spectrum as the initial value. \todo{Maybe write what the different quantities are?}
 
 An other ting to notice is that we have defined a $l_{max}$, while $l$ in reality can take an infinite number of values. This is because we can use a technique called \textit{line of sight integration}, where only the first six $l$s are needed to find the rest \todo{Is this the correct way of defining line of sight integration?}.
 
+\todo[inline]{Find the correct expression for dPsi in the code. Also change units on plot legends}
 
 \subsection{Tight Coupling}\label{sec:tight}
 There is one period we need to be careful of. At early times, before recombination, the mean free path of the photons are really small, meaning that $\tau >> 1$. During this time photons are unable to travel far before being scattered by electrons, this makes the photon aware only of a small area around it. This means that the baryons and photons are tightly coupled, behaving more like a single fluid. Due to the coupling, all but the largest perturbation are smoothed out, leaving the fluid in near equilibrium. All momentums of the photon temperatures are therefore negligible, except from $\Theta_0$ and $\Theta_1$. This is all well and fine, except from the fact that we now have a $\tau'$ which is very large multiplied with a factor $3\Theta_1-v_b$ which is very small. This is a recipe for numerical instability. This means that we need another way of integrating during this period. One can show that with these limitations we can integrate most of the expressions as before, but need to change $v_b'$ and $\Theta_0'$ to
@@ -151,7 +152,7 @@ All the integration is done by an integration function from \textit{Numerical Re
 
 Since the $x$ value of the end of tight coupling is different for each $k$, this value has to be calculated for each $k$. Arrays with all the relevant quantities are saved after each step, for later visualization.
 
-\todo{The method seems short, but I do not know what else to write.}
+\todo{Write about the extension of $x_t$ and that is now called $x$}
 
 \section{Results and Discussion}
 

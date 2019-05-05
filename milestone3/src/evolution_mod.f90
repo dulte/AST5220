@@ -10,9 +10,8 @@ module evolution_mod
   real(dp),     parameter, private :: a_init   = 1.d-8
   real(dp),     parameter, private :: k_min    = 0.1d0 * H_0 / c
   real(dp),     parameter, private :: k_max    = 1.d3  * H_0 / c
-  integer(i4b), parameter          :: n_k      = 6
-  integer(i4b), parameter          :: n_k      = 100
-  integer(i4b), parameter          :: n_before = 1000             !Number of points before recombination
+  integer(i4b), parameter          :: n_k      = 6                ! For the real simulation this is set to 100
+  integer(i4b), parameter          :: n_before = 1000             ! Number of points before recombination
   integer(i4b), parameter, private :: lmax_int = 6
 
 
@@ -78,14 +77,13 @@ contains
 
     ! Task: Initialize k-grid, ks; quadratic between k_min and k_max
     allocate(ks(n_k))
-    ks = [(k_min + ((k_max-k_min)/(n_k-1))*(i-1),i=1,n_k)]
+    ks = [(k_min + (k_max-k_min)*(float(i-1)/float(n_k-1))**2.d0,i=1,n_k)]
     ks(1) = 0.1 * H_0 / c
     ks(2) = 8.36 * H_0 / c
     ks(3) = 85.9 * H_0 / c
     ks(4) = 245.1 * H_0 / c
     ks(5) = 636.8 * H_0 / c
     ks(6) = 1.d3 * H_0 / c
-    ks = [(k_min + (k_max-k_min)*(float(i-1)/float(n_k-1))**2.d0,i=1,n_k)]
     
 
 
@@ -158,9 +156,13 @@ contains
     ! from the initial time until now, but
     ! with different step sizes for the
     ! different eras!
-    ! #########################################
+    ! This could instead have been done in 
+    ! time_mod's x_t, but I started doing it 
+    ! here, and now it is to much to fix.
+    ! But it shouldn't make any difference later
+    ! ##########################################
     x_init = log(a_init)
-    eps    = 1.d-5
+    eps    = 1.d-8
     hmin   = 0.d0
 
     n1          = 200                                   ! Number of grid points during recombination
@@ -207,7 +209,7 @@ contains
        write(*,*) "Starting to Integrate mode ", k, ". With k = ", ks(k)/(H_0/c)
 
        k_current = ks(k)  ! Store k_current as a global module variable
-       h1        = 1.d-2
+       h1        = 1.d-5
 
 
        ! Find the time to which tight coupling is assumed, 
@@ -229,12 +231,8 @@ contains
        write(*,*) "Integrating Tight Decoupling"
        
        ! Integration during tight coupling
-       do i = 1, index_tc
-
-       
-          
+       do i = 1, index_tc          
           call odeint(y(1:7), x(i-1), x(i), eps, h1, hmin, derivs_tight_coupling, bsstep, output) 
-
  
           y(8)   = -(20.d0*c*k_current)/(45.d0*get_H_p(x(i))*get_dtau(x(i)))*y(7)
           do l = 3, lmax_int
@@ -302,6 +300,7 @@ contains
     get_tight_coupling_time = x_end  !Default values
     index = n_before
 
+    ! Finds the correct x_tc and index. This could be done in one if test...
     do i =0, n_before
       
       if (abs(get_dtau(x(i)))<10) then 
@@ -357,7 +356,7 @@ contains
     dPhi(i,k)     = dydx(5)
     dv_b(i,k)     = dydx(4)
     dTheta(i,:,k) = dydx(6:lmax_int)
-    dPsi(i,k)     = -dydx(5) - (12.d0*H_0**2.d0)/(c*c*k_current*k_current*exp(2.d0*x))*(dydx(8)+1.d0/((x)*exp(x))*y(8)) !Temp: Find out how to do this
+    dPsi(i,k)     = -dPhi(i,k) - omega_r*(12.d0*H_0**2.d0)/(c*c*k_current*k_current*exp(2.d0*x))*(dTheta(i,2,k)-2.d0*Theta(i,2,k)) !Temp: Find out how to do this
 
 
   end subroutine save_to_arrays
@@ -374,7 +373,7 @@ contains
     real(dp), dimension(:), intent(in)  :: y
     real(dp), dimension(:), intent(out) :: dydx
 
-    real(dp)                            :: Psi, R, q, Theta_2, H_p, dtau, ck, ck_H!ddelta, dv, ddelta_b, dv_b, dPhi, Psi, R, dTheta_0, dTheta_1, q, Theta_2, H_p, dtau
+    real(dp)                            :: Psi, R, q, Theta_2, H_p, dtau, ck, ck_H
     
 
     ! Calculates the different derivatives
@@ -394,8 +393,6 @@ contains
     dydx(1)      = ck_H*y(3) - 3.d0*dydx(5)
     dydx(2)    = ck_H*y(4) - 3.d0*dydx(5)
 
-    
-    
     dydx(6)    = -ck_H*y(7) - dydx(5)
     
 
@@ -405,10 +402,6 @@ contains
     dydx(4)        = (1.d0/(1.d0 + R))*(-y(4) - ck_H*Psi + R*(q + ck_H*(2.d0*Theta_2-y(6)) - ck_H*Psi))
 
     dydx(7)    = 1.d0/3.d0*(q - dydx(4))
-
-
- 
-
     
   end subroutine derivs_tight_coupling
 
@@ -420,12 +413,9 @@ contains
     real(dp), dimension(:), intent(out) :: dydx
 
     
-    real(dp)                            :: Psi, R, H_p, dtau,ck,ck_H !ddelta, dv, ddelta_b, dv_b, dPhi, Psi, R, H_p, dtau
+    real(dp)                            :: Psi, R, H_p, dtau,ck,ck_H 
     integer(i4b)                        :: l
     
-    
-    
-
     ! Calculates the different derivatives
 
     H_p = get_H_p(x)
@@ -433,8 +423,8 @@ contains
     ck = c*k_current
     ck_H = ck/H_p
 
-    R                 = (4.d0*omega_r)/(3.d0*omega_b*exp(x)) !Temp: Will probabily need to use the evolving versions of the omegas
-    Psi               = -y(5) - (12.d0*H_0**2.d0)/(ck*ck*exp(2.d0*x))*omega_r*y(8) !Temp: May have to use evolving version of Omega_r
+    R                 = (4.d0*omega_r)/(3.d0*omega_b*exp(x)) 
+    Psi               = -y(5) - (12.d0*H_0**2.d0)/(ck*ck*exp(2.d0*x))*omega_r*y(8) 
     dydx(5)           = Psi - (ck*ck)/(3.d0*H_p**2.d0)*y(5) + H_0**2.d0/(2.d0*H_p**2.d0)*(omega_m*exp(-x)*y(1)+omega_b*exp(-x)*y(2)+4.d0*omega_r*exp(-2.d0*x)*y(6))
 
     dydx(2)           = ck_H*y(4) - 3.d0*dydx(5) 
