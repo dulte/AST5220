@@ -17,5 +17,11 @@ Down: 0.2
 
 Omega_r
 Default:  8.3d-5
-Up: 1.0d-5
+Up: 1.0d-4
 Down: 6.6d-5
+
+
+h
+Default: 0.7
+Up: 0.8
+Down: 0.6

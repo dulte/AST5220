@@ -64,7 +64,7 @@ def normalize_cl(cl,cl_default):
 
 
 def plot_default_againts_other(ls,cl_default,cl_up,cl_down,observed,observed_lim,up_label,down_label,title):
-    #plt.errorbar(ls,observed,yerr=observed_lim,label="Observed")
+    plt.errorbar(ls,observed,yerr=observed_lim,label="Observed")
     
     plt.plot(ls,cl_default,label="default")
     plt.plot(ls,cl_up,label=up_label)
@@ -94,6 +94,18 @@ if __name__ == "__main__":
     cl_default_normed = normalize_cl(cl_default,cl_default)
     ls = read_file(output_path+"ls.dat")
     ls = ls[1:]
+
+    # For default
+    plt.errorbar(ls,Dl,yerr=Dl_limits,label="Observed")
+    
+    plt.plot(ls,cl_default_normed,label="default")
+    plt.title(r"$C_l$ for simulation and observations")
+    plt.xlabel(r"$l$")
+    plt.ylabel(r"$C_l\cdot l(l+1)/2\pi [\mu K^2]$")
+    plt.legend(loc="best")
+    plt.show()
+
+
 
     #For changes in n
     cl_n_up = read_file(output_path+"cls_n_up.dat")
@@ -133,16 +145,61 @@ if __name__ == "__main__":
 
     plot_default_againts_other(ls,cl_default_normed,cl_r_up,cl_r_down,Dl,Dl_limits,up_label=r"$\Omega_r = 1.0\cdot 10^{-4}$",down_label=r"$\Omega_r = 6.6\cdot 10^{-5}$",title=r"$C_l$ for Different $\Omega_r$")
 
+    #For changes in h
+    cl_h_up = read_file(output_path+"cls_h_up.dat")
+    cl_h_down = read_file(output_path+"cls_h_down.dat")
+
+    cl_h_up = normalize_cl(cl_h_up,cl_default)
+    cl_h_down = normalize_cl(cl_h_down,cl_default)
+
+    plot_default_againts_other(ls,cl_default_normed,cl_h_up,cl_h_down,Dl,Dl_limits,up_label=r"$h = 0.8$",down_label=r"$h=0.6$",title=r"$C_l$ for Different $h$")
+
 
     
     
-
+    # For plotting Source function times Bessel
     sjl = read_file(output_path+"sjl.dat")
     x = read_file(output_path+"x.dat")
 
 
     plt.plot(x,sjl/1e-3)
+    plt.xlim(-8,0)
+    plt.ylim(-3,2)
+    plt.xlabel("x")
+    plt.ylabel(r"$\tilde{S}j_l(k(\eta_0-\eta))/10^{-3}$")
     plt.show()
+
+
+    #For plotting transfer function
+    ks = np.linspace(0.1,1001,5000)
+    c = 2.99792458e8
+    h0 = 0.7
+    Mpc = 3.08568025e22
+    H_0 = h0 * 100.0 * 1e3 / Mpc
+
+    for l in [2,200,400,800,1000,1200]:
+        filename = "transfer_l_%s.dat" %l
+        Theta = read_file(output_path+filename)
+        plt.plot(ks[:2500],Theta[:2500],label="l=%s"%l)
+    plt.legend(loc="best")
+    plt.xlabel(r"$kc/H_0$")
+    plt.ylabel(r"$\Theta_l$")
+    plt.xlim(0,500)
+    plt.ylim(-.025,.025)
+    plt.show()
+
+
+    for l in [2,200,400,800,1000,1200]:
+        filename = "transfer_l_%s.dat" %l
+        Theta = read_file(output_path+filename)
+        plt.plot(ks[:2000],l*Theta[:2000]**2/(ks[:2000]),label="l=%s"%l)
+    plt.legend(loc="best")
+    plt.xlabel(r"$kc/H_0$")
+    plt.ylabel(r"$l\Theta_l^2/k \cdot H_0/c$")
+    plt.xlim(0,400)
+    plt.ylim(0,0.0002)
+    plt.show()
+
 
     
 
