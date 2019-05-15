@@ -1,0 +1,21 @@
+Spectral Index
+Default: 0.967
+Up: 1.034
+Down: 0.9
+
+n = 0.967 is used from here 
+
+Omega_b:
+Default: 0.046
+Up: 0.060
+Down: 0.032
+
+Omega_m:
+Default: 0.224
+Up: 0.3
+Down: 0.2
+
+Omega_r
+Default:  8.3d-5
+Up: 1.0d-5
+Down: 6.6d-5
