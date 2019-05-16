@@ -50,6 +50,8 @@ So far we have found out how the Universe expands, found the number density of f
 
 \todo{Maybe summarize the method and theory?}
 
+\todo{What is $C_l$, and how to $l$ relate to scale!}
+
 \section{Theory}
 We are after the power spectrum
 
@@ -61,7 +63,7 @@ We need to integrate since since we have Fourier transformed all out quantities.
 T(\hat{n}) = \sum a_{l,m} Y_{l,m}(\hat{n}),
 \end{equation}
 where $Y_{l,m}$ are spherical harmonics and $a_{l,m}$ the coefficients containing the actual physics of the temperature field. Instead of finding $|a_{l,m}|^2$ directly, we can instead define $|a_{l,m}|^2 = P(k)\Theta_l^2$, where $P(k)$ is the primordial power spectrum and $\Theta_l$ is the so called \textit{transfer function} which contain all the information about how the power spectrum has evolved from inflation and until today. We can get the primordial power spectrum from the Harrison Zel'dovich spectrum 
-\begin{equation}
+\begin{equation}\label{eq:P}
 \frac{k^3}{2\pi^2}P(k) = \left(\frac{ck}{H_0}\right)^{n_s - 1},
 \end{equation}
 where $n_s$ is the spectral index. We can now write the power spectrum as
@@ -116,16 +118,95 @@ The first plots we are going to look at source function and the transfer functio
 \begin{figure*}[!htbp]
 \centering
 \begin{tabular}{@{}ccc@{}}
-\subfloat[The gravitational curvature potential $\Phi$. As with the matter, perturbations before entering the horizon are constant. The three larges $k$s (corresponding to smalles scales) will enter the horizon during radiation domination, rapidly decay before starting to oscillate. The oscillation will be dampend, and (after the start of matter domination) the potential will become constant. The largest scales will enter after radiation-matter equvalence, during which they will fall a bit and stay constant. Near present age, dark energy starts to dominate, and $\Phi$ starts to decrease.\label{fig:Phi}]{\includegraphics[width=0.5\textwidth]{theta_l.png}} & 
-\subfloat[The Newtonian potential $\Psi$. This growth more or less the same as $\Phi$ decreses. We can approximate that $\Psi = - \Phi$.\label{fig:Psi}]{\includegraphics[width=0.5\textwidth]{theta_sq_k.png}} 
+\subfloat[The figure shows a completly unscaled transfer function $\Theta_l(k)$.\label{fig:theta}]{\includegraphics[width=0.5\textwidth]{theta_l.png}} & 
+\subfloat[Plot showing $\Theta_l^2(k)/k$. The plots are scaled with $lH_0/c$ to make the functions for the different $l$s more similar.\label{fig:theta_sq_k}]{\includegraphics[width=0.5\textwidth]{theta_sq_k.png}} 
 \end{tabular}
 \caption[]{Plots showing the transfer function $\Theta_l(k)$ for a selection of $l$s.}
-\label{fig:psi_phi}
+\label{fig:thetas}
 \end{figure*}
 
+Looking at figure \ref{fig:sjl} we see $\tilde{S}j_l(k(\eta_0 - \eta))$. This is plotted as a sanity check to compare with figure 3 in Callin \cite{callin}. The plot is for $l = 100$ and the closes we can get to $k = 340\cdot H_0/c$.  This is more or less the same plot as Callin got, meaning that we proceed with a trust in out result of $\tilde{S}$. \todo{Rewrite!} If we look at the transfer function $\Theta_l(k)$ in figure \ref{fig:thetas} we see that the transfer function on all scales are oscillation as damped harmonic oscillators. 
+
+In fig. \ref{fig:theta_sq_k} we see that generally the scaled $l\cdot \Theta_l/k$ seems to decrease for larger $l$. The clear exception of this is for $l=2$, which is much smaller than $l=200$. I think it is suppose to be larger, and that something is wrong at small $l$s. We will see this when looking at the power spectra.
+
+\subsection{Power Spectrum $C_l$}
+The first power spectrum calculated is with the parameters found in the \textit{Default} row of table \ref{tab:parameters}. 
+
+\begin{table}[!htb]
+\centering
+\begin{tabular}{l c c c c c}
+& $\Omega_b$ & $\Omega_m$ & $\Omega_r$ & $n_s$ & $h$ \\
+\hline 
+Default & $0.046$ & $0.224$ & $8.3\cdot 10^{-5}$ & $0.967$ & $0.7$ \\
+Best Fit & $0.06$ & $0.18$ & $8.3\cdot 10^{-5}$ & $0.85$ & $0.7$ \\
+
+\end{tabular}
+\caption{Parameters used for the default power spectrum and the best fit.}\label{tab:parameters}
+\end{table}
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[scale=0.25]{Cl.png}
+\caption{The power spectrum $C_l l(l+1)/2\pi$ in $\mu K^2$. We see that thoug it has the same shape as the Planck data, the values after the acoustic peak is a bit to low. We can also see that for low $l$s the power spectrum as a way to large value.}\label{fig:Cl_default}
+\end{figure}
+
+The resulting power spectrum can be seen in figure \ref{fig:Cl_default}. Since the top of the acoustic peak in both the simulated data and in the Planck data is normalized to be at $5775 \mu K^2$, they will always agree here. After the peak there is disagreement between the simulated result and the observations, with the simulated $C_l$ having a higher value. Before the peak there is agreement above $l \approx 90$; below this the simulated data shoots upwards, and at $l \approx 2$ there is only mess... Looking back at fig. \ref{fig:theta_sq_k} we saw that $l\Theta_l/k$ for $l=2$ had a smaller value than expected, and I think that is the reason we see the high value of the simulated $C_l$ for the small $l$s. This problem is not removed by adjusting the parameters -- have not test by changing $\Omega_k$ and $\Omega_{\Lambda}$, even though they have alot to say for small $l$s --, and will in some instances make it worse. 
+
+\begin{figure*}[!htbp]
+\centering
+\begin{tabular}{@{}ccc@{}}
+\subfloat[$C_l$ when the spectral index $n_s$ is changed. We see that with a lower $n_s$, $C_l$ decreases. The increase for smaller $l$s is due to the normalization at the peak of the acoustic peak. \label{fig:Cl_n}]{\includegraphics[width=0.5\textwidth]{Cl_n.png}} & 
+\subfloat[$C_l$ when the dimensionless Hubble parameter $h$ is changed. We see that there is not much difference when the change in the range that would expect to see. \label{fig:Cl_h}]{\includegraphics[width=0.5\textwidth]{Cl_h.png}} \\
+\subfloat[$C_l$ when the density parameter of baryons $\Omega_b$ is changed. We see that for when $\Omega_b$ is higher, there are more baryons, meaning they are able to compress more, and decompress less, meaning that the second compression peak now are larger than the first decompression peak. The opposite is true when decreases $\Omega_b$.\label{fig:Cl_b}]{\includegraphics[width=0.5\textwidth]{Cl_b.png}} & 
+\subfloat[$C_l$ when the density parameter of cold dark matter $\Omega_m$ is changed. With a higher $\Omega_m$, the main effect here is that since dark matter is more prevalent, recombination will happen later, moving the first compression peak towards smaller $l$s. The second effect is to lower all peaks, this is not seen here, since we normalize the first compression peak. This makes it look like higher $\Omega_m$ increases the peaks. The opposite is true when decreases $\Omega_m$.\label{fig:Cl_m}]{\includegraphics[width=0.5\textwidth]{Cl_m.png}} \\
+\subfloat[$C_l$ when the density parameter of radiation $\Omega_r$ is changed. With a higher $\Omega_r$ recombination seems to happen earlier, this pushing the first compression peak to higher $l$s. It also streches the distance between the peaks. Since we now have more radiation the pressure in the compressed baryon-photon fluid is higher, and thus the first decompression peak is higher than the second compression peak. The opposite is true when decreases $\Omega_r$.\label{fig:Cl_r}]{\includegraphics[width=0.5\textwidth]{Cl_r.png}} 
+\end{tabular}
+\caption[]{Plots showing the differences in the the power spectrum $C_l$ when changing the five parameters one by one.}
+\label{fig:Cl_changed}
+\end{figure*}
+
+\todo[inline]{Check if the effect of $\Omega_m$ is to decrease all peaks is true!!! Just check the plots with no normalization!}
+
+Figure \ref{fig:Cl_changed} we see that happens when each of the parameters are changed one by one. Below I describe what happens when the parameters are increased, but the opposite should happen if they are decreased (as the plots show).
+
+\subsubsection{$n_s$}
+The result is showed in fig. \ref{fig:Cl_n}. Since we have the primordial power spectrum found in eq. \ref{eq:P} there is a strong dependence on $n_s$. If we have a non-unity $n_s$ the power spectrum will depend on scale. With a $n_s<1$ the primordial power spectrum decreases with scale, and the same would be true for $C_l$. This is what we see from fig. \ref{fig:Cl_n}. But in the figure we see that $C_l$ increases if $l< 220$. This is because we have renormalized so that all the acoustic peak as the same hight.
+
+\subsubsection{$h$}
+Since many of the equation used in our calculation is dependent on $H$ and thus the dimensionless Hubble parameter $h$, we would expect to see differences when changing it. But from fig. \ref{fig:Cl_h} we see that the changes are very small.
+
+\subsubsection{$\Omega_b$}
+$\Omega_b$, fig. \ref{fig:Cl_b}, determines the amount of baryons in the Universe. With more baryon the gravitation wells the baryon-photon fluid collapses into are deeper, and the compression is larger and decompression smaller. This is why we see that the ratio between the compression/decompression peaks are larger. The first compression peak should also higher, and the ratio between this and the rest of the peaks should be larger, but due to the normalization it stays the same, while the later peaks decrease. 
+
+\subsubsection{$\Omega_m$}
+$\Omega_m$, fig. \ref{fig:Cl_m}, determines the amount of cold dark matter in the Universe. A larger amount of dark matter would make a deeper gravitational well, which will dampen the acoustic oscillations, so the peaks decay faster. It would also decrease all peaks, but due to the normalization the first compression peak is always the same hight, while the later peaks decreases. Since dark matter makes up the larger part of matter, an increase in dark matter starts matter domination earlier and thus recombination happens later. As we see in fig. \ref{fig:Cl_m} the first peak is towards lower $l$s thus happening	 later.
+
+\subsubsection{$\Omega_r$}
+$\Omega_r$, fig. \ref{fig:Cl_r}, determines the amount of radiation -- relativistic particles -- in the Universe. When the the baryon-photon fluid oscillates it is the radiation which makes the pressure. So with more radiation the compression should be weaker and the decompression stronger. This is what we see in fig. \ref{fig:Cl_r}. We also see that the peaks are farther from each other.
 
 
+\subsection{The Best Fit Parameters}
 
+So since we have to decrease the later peaks, the easiest parameters to change is $\Omega_b$, $\Omega_m$ and $n_s$. We are going to increase $\Omega_b$, and decrease $\Omega_m$ and $n_s$. Figure \ref{fig:Cl_bf} shows the result for four different combinations. I chose the light blue as the best fit, but a better fit would be somewhere between the light blue and purple. The parameters for this power spectrum is found in table \ref{tab:parameters}. We see that we have a quite good fit, but there is still problems for smaller $l$s. 
+
+It is possible to use $\Omega_r$ and $h$ and try to make better fit, but was not done due to time restrictions. 
+
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[scale=0.25]{Cl_bf.png}
+\caption{The power spectrum $C_l l(l+1)/2\pi$ in $\mu K^2$. I chose the light blue as the best fit, but a better fit would be somewhere between the light blue and purple.}\label{fig:Cl_bf}
+\end{figure}
+
+\section{Conclusion}
+
+We have finally managed to take the theory and make a power spectrum with can be compared with real observations,fig. \ref{fig:Cl_bf}! We were so able to find estimations of the cosmological parameters based on the observations, tab. \ref{tab:parameters}. The estimations fitted the observations quite well, except for at low $l$s. There are some problems here which I did not have the time to debug.
+
+Even though the best fit curve correlated well with the data, it was not the same parameters found by the Planck team. This is most likely due to the fact that polarization is ignored in this analysis\footnote{And that the Planck team is way better at parameter estimation than me...}!
+
+But all in all the result was very satisfying, and the way there very educational!
+
+\todo{Write more?}
 
 
 \begin{thebibliography}{9}
