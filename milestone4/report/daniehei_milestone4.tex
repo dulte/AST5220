@@ -88,15 +88,55 @@ The method consists of two parts: Calculating the source function and integratin
 \subsection{Source Function}
 We want the source function from the start of recombination until today. From milestone 3 we have all the quantities we need to calculate $\tilde{S}$, but not with the precision we want. So with our quadratic $k$ grid with $100$ $k$s and our $x$ grid with $500$ points, we can find an initial grid of $\tilde{S}(k,x)$. We can then spline this 2D array. With new, finer $k$ and $x$ grids, both with $5000$ points in the same intervals, we can use the spline to get a new $\tilde{S}$ array with a finer grid. It is these grid we are going to use for the rest of the calculations.
 
+Both $\tilde{S}$ and $j_l$ are saved in binary files, so that if all the calculations below needs to be run multiple times -- for any reason --, we don't need to solve all the differential equations and calculate the Bessel functions again.
+
 \subsection{Integrating Everything}
-To find $\Theta_l$ we see from eq. \eqref{eq:Theta} that we need to find the spherical Bessel functions. Fortunately we are given functions to find these. But we need to save the Bessel function in a grid for each $l$ and for $3500$ $x$ values in the same range as out $x$ grid. For each $l$ we will spline the Bessel function for use later.
+To find $\Theta_l$ we see from eq. \eqref{eq:Theta} that we need to find the spherical Bessel functions. Fortunately we are given functions to find these. But we need to save the Bessel function in a grid for each $l$ and for $5400$ values from $0$ to $3500$. For each $l$ we will spline the Bessel function for use later.
 
 We can now use eq. \eqref{eq:Theta} to find the transfer functions $\Theta_l$. This integration was done with a simple trapezoidal integration \todo{Check is this was used, and update if something else is used!}. 
 
-We then integrate the $\Theta_l$s with the primordial power spectrum to get the $C_l$s, eq. \eqref{eq:Cl}. This again is done via an Euler Scheme \todo{Change is something else is used!}. We start by finding $C_l$ for $44$ $l$s from $1$ to $1200$. We then spline and retrieve a $C_l$ for each $l$ in the same interval. We then normalize as $C_l\cdot l(l+1)/2\pi$, and we have our final result!
+We then integrate the $\Theta_l$s with the primordial power spectrum to get the $C_l$s, eq. \eqref{eq:Cl}. This again is done via an Euler Scheme \todo{Change is something else is used!}. We start by finding $C_l$ for $44$ $l$s from $1$ to $1200$. We then spline and retrieve a $C_l$ for each $l$ in the same interval. We then normalize as $C_l\cdot l(l+1)/2\pi$, and we have our long sought after power spectrum. 
+
+All the calculation are in the first instance done with a default set of parameters $\Omega_b$, $\Omega_m$, $\Omega_r$, $n_s$ and $h$. With these parameters, the resulting power spectrum are not a good fit for the one observed by the Planck Satellite, so we need to find the correct values for the parameters. This is done by adjusting the parameters one by one and seeing who this affect the power spectrum, this making it possible to infer how we can change the parameters to fit the observed power spectrum.
 
 \todo{Maybe write more?}
 
+\section{Results}
+
+The first plots we are going to look at source function and the transfer function. 
+
+\todo[inline]{Change font of axis!!!}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.25]{sjl.png}
+\caption{This shows the source function multiplied with the spherical Bessel function for $l=100$ and $k = 340\cdot H_0/c$.}\label{fig:sjl}
+\end{figure}
+
+\begin{figure*}[!htbp]
+\centering
+\begin{tabular}{@{}ccc@{}}
+\subfloat[The gravitational curvature potential $\Phi$. As with the matter, perturbations before entering the horizon are constant. The three larges $k$s (corresponding to smalles scales) will enter the horizon during radiation domination, rapidly decay before starting to oscillate. The oscillation will be dampend, and (after the start of matter domination) the potential will become constant. The largest scales will enter after radiation-matter equvalence, during which they will fall a bit and stay constant. Near present age, dark energy starts to dominate, and $\Phi$ starts to decrease.\label{fig:Phi}]{\includegraphics[width=0.5\textwidth]{theta_l.png}} & 
+\subfloat[The Newtonian potential $\Psi$. This growth more or less the same as $\Phi$ decreses. We can approximate that $\Psi = - \Phi$.\label{fig:Psi}]{\includegraphics[width=0.5\textwidth]{theta_sq_k.png}} 
+\end{tabular}
+\caption[]{Plots showing the transfer function $\Theta_l(k)$ for a selection of $l$s.}
+\label{fig:psi_phi}
+\end{figure*}
+
+
+
+
+
+
+\begin{thebibliography}{9}
+
+\bibitem{callin}
+  Callin, Peter,
+  \textit{How to calculate the CMB spectrum},
+  astro-ph/0606683
+  2006.
+
+\end{thebibliography}
 
 
 \end{document}
