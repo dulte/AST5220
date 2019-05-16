@@ -80,7 +80,22 @@ where $j_l(k(\eta_0 - \eta))$ is the $l^{th}$ spherical Bessel function evaluate
 \begin{equation}\label{eq:S}
 \tilde{S}(k,x) = \tilde{g}\left(\Theta_0 + \Psi + \frac{1}{4}\Pi\right) +e^{-\tau}\left(\Psi' - \Phi'\right)  - \frac{1}{ck}\frac{d}{dx}\left(\mathcal{H}\tilde{g}v_b\right) + \frac{3}{4c^2k^2}\frac{d}{dx}\left[\mathcal{H}\frac{d}{dx}\left(\mathcal{H}\tilde{g}\Pi\right) \right],
 \end{equation}
-where (here) $\Pi = \Theta_2$. The source function can be thought of a function describing all the different things a photon encounters on our way to us that decreases or increases its energy. The first term describes the Sachs-Wolfe effect -- the loss of energy as a function climbs out of a gravitational potential --, the second term describes the integrated Sachs-Wolfe effect -- if the gravitational potential have change from when a photon enters to it leaves, this affects its energy --, and the third term is the Doppler term. Notice that the source function only needs temperature momenta up to $\Theta_2$, so we do not need to solve the differential equations for $l$ higher than $2$. In reality, since we use an approximation to find $\Theta_{lmax}'$, there is a small error in the highest momentum. If we solve for $l$ up to $6$ this error is small enough for $\Theta_2$ and below, that the error can be ignored.
+where (here) $\Pi = \Theta_2$. The expression for $\frac{d}{dx}\left[\mathcal{H}\frac{d}{dx}\left(\mathcal{H}\tilde{g}\Pi\right) \right]$ is found in Callin \cite{callin}. On expression inside this expression, that is not shown in the article is $\frac{d}{dx}\mathcal{H}\mathcal{H}'$.
+
+\begin{equation}
+\mathcal{H} = e^x H = H_0 \sqrt{(\Omega_{b,0} + \Omega_{m,0})\exp(-x) + (\Omega_{r,0} + \Omega_{\nu,0})\exp(-2x) + \Omega_{\Lambda,0}\exp(2x)}    
+\end{equation}
+\begin{equation}
+\mathcal{H}' = \frac{H_0^2}{2\mathcal{H}}\left[-(\Omega_{b,0} + \Omega_{m,0})\exp(-x) -2 (\Omega_{r,0} + \Omega_{\nu,0})\exp(-2x) + 2\Omega_{\Lambda,0}\exp(2x)\right]  
+\end{equation}
+\begin{equation}
+\Rightarrow \mathcal{H}\mathcal{H}' = \frac{H_0^2}{2}\left[-(\Omega_{b,0} + \Omega_{m,0})\exp(-x) -2 (\Omega_{r,0} + \Omega_{\nu,0})\exp(-2x) + 2\Omega_{\Lambda,0}\exp(2x)\right]
+\end{equation}
+\begin{equation}
+\Rightarrow \frac{d}{dx} \mathcal{H}\mathcal{H}' = \frac{H_0^2}{2}\left[(\Omega_{b,0} + \Omega_{m,0})\exp(-x) +4 (\Omega_{r,0} + \Omega_{\nu,0})\exp(-2x) + 4\Omega_{\Lambda,0}\exp(2x)\right]
+\end{equation}
+
+The source function can be thought of a function describing all the different things a photon encounters on our way to us that decreases or increases its energy. The first term describes the Sachs-Wolfe effect -- the loss of energy as a function climbs out of a gravitational potential --, the second term describes the integrated Sachs-Wolfe effect -- if the gravitational potential have change from when a photon enters to it leaves, this affects its energy --, and the third term is the Doppler term. Notice that the source function only needs temperature momenta up to $\Theta_2$, so we do not need to solve the differential equations for $l$ higher than $2$. In reality, since we use an approximation to find $\Theta_{lmax}'$, there is a small error in the highest momentum. If we solve for $l$ up to $6$ this error is small enough for $\Theta_2$ and below, that the error can be ignored.
 
 \todo{Maybe write down all the equations used to calc S}
 
@@ -125,7 +140,7 @@ The first plots we are going to look at source function and the transfer functio
 \label{fig:thetas}
 \end{figure*}
 
-Looking at figure \ref{fig:sjl} we see $\tilde{S}j_l(k(\eta_0 - \eta))$. This is plotted as a sanity check to compare with figure 3 in Callin \cite{callin}. The plot is for $l = 100$ and the closes we can get to $k = 340\cdot H_0/c$.  This is more or less the same plot as Callin got, meaning that we proceed with a trust in out result of $\tilde{S}$. \todo{Rewrite!} If we look at the transfer function $\Theta_l(k)$ in figure \ref{fig:thetas} we see that the transfer function on all scales are oscillation as damped harmonic oscillators. 
+Looking at figure \ref{fig:sjl} we see $\tilde{S}j_l(k(\eta_0 - \eta))$. This is plotted as a sanity check to compare with figure 3 in Callin \cite{callin}. The plot is for $l = 100$ and the closes we can get to $k = 340\cdot H_0/c$.  This is more or less the same plot as Callin got, meaning that we are on the right track. If we look at the transfer function $\Theta_l(k)$ in figure \ref{fig:thetas} we see that the transfer function on all scales are oscillation as damped harmonic oscillators. 
 
 In fig. \ref{fig:theta_sq_k} we see that generally the scaled $l\cdot \Theta_l/k$ seems to decrease for larger $l$. The clear exception of this is for $l=2$, which is much smaller than $l=200$. I think it is suppose to be larger, and that something is wrong at small $l$s. We will see this when looking at the power spectra.
 
