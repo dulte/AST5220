@@ -7,6 +7,11 @@ from scipy.signal import savgol_filter
 sns.set_style("darkgrid")
 sns.set_context("talk")
 
+plt.rc('xtick', labelsize=20)
+plt.rc('ytick', labelsize=20)
+
+
+
 def read_file(name):
     y = []
 
@@ -69,10 +74,10 @@ def plot_default_againts_other(ls,cl_default,cl_up,cl_down,observed,observed_lim
     plt.plot(ls,cl_default,label="default")
     plt.plot(ls,cl_up,label=up_label)
     plt.plot(ls,cl_down,label=down_label)
-    plt.title(title)
-    plt.xlabel(r"$l$")
-    plt.ylabel(r"$C_l\cdot l(l+1)/2\pi [\mu K^2]$")
-    plt.legend(loc="best")
+    plt.title(title,fontsize=30)
+    plt.xlabel(r"$l$",fontsize=30)
+    plt.ylabel(r"$C_l\cdot l(l+1)/2\pi [\mu K^2]$",fontsize=30)
+    plt.legend(loc="best",fontsize=20)
     plt.show()
 
 
@@ -99,10 +104,11 @@ if __name__ == "__main__":
     plt.errorbar(ls,Dl,yerr=Dl_limits,label="Observed")
     
     plt.plot(ls,cl_default_normed,label="default")
-    plt.title(r"$C_l$ for simulation and observations")
-    plt.xlabel(r"$l$")
-    plt.ylabel(r"$C_l\cdot l(l+1)/2\pi [\mu K^2]$")
-    plt.legend(loc="best")
+    plt.title(r"$C_l$ for simulation and observations",fontsize=30)
+    plt.xlabel(r"$l$",fontsize=30)
+    plt.ylabel(r"$C_l\cdot l(l+1)/2\pi [\mu K^2]$",fontsize=30)
+    plt.legend(loc="best",fontsize=20)
+    
     plt.show()
 
 
@@ -155,6 +161,32 @@ if __name__ == "__main__":
     plot_default_againts_other(ls,cl_default_normed,cl_h_up,cl_h_down,Dl,Dl_limits,up_label=r"$h = 0.8$",down_label=r"$h=0.6$",title=r"$C_l$ for Different $h$")
 
 
+    #For best fit
+    cl_best_1 = read_file(output_path+"cls_bf_1.dat")
+    cl_best_1 = normalize_cl(cl_best_1,cl_default)
+
+    cl_best_2 = read_file(output_path+"cls_bf_2.dat")
+    cl_best_2 = normalize_cl(cl_best_2,cl_default)
+
+    cl_best_6 = read_file(output_path+"cls_bf_6.dat")
+    cl_best_6 = normalize_cl(cl_best_6,cl_default)
+
+    cl_best_7 = read_file(output_path+"cls_bf_7.dat")
+    cl_best_7 = normalize_cl(cl_best_7,cl_default)
+
+    plt.errorbar(ls,Dl,yerr=Dl_limits,label="Observed")
+    
+    plt.plot(ls,cl_best_1,label=r"$\Omega_b = 0.06, \Omega_m = 0.2, n_s = 0.9$")
+    plt.plot(ls,cl_best_2,label=r"$\Omega_b = 0.055, \Omega_m = 0.18, n_s = 0.9$")
+    plt.plot(ls,cl_best_6,label=r"$\Omega_b = 0.06, \Omega_m = 0.18, n_s = 0.85$")
+    plt.plot(ls,cl_best_7,label=r"$\Omega_b = 0.065, \Omega_m = 0.20, n_s = 0.80$")
+    plt.title(r"$C_l$ for Best Fit",fontsize=30)
+    plt.xlabel(r"$l$",fontsize=30)
+    plt.ylabel(r"$C_l\cdot l(l+1)/2\pi [\mu K^2]$",fontsize=30)
+    plt.legend(loc="best",fontsize=20)
+    plt.show()
+
+
     
     
     # For plotting Source function times Bessel
@@ -165,8 +197,8 @@ if __name__ == "__main__":
     plt.plot(x,sjl/1e-3)
     plt.xlim(-8,0)
     plt.ylim(-3,2)
-    plt.xlabel("x")
-    plt.ylabel(r"$\tilde{S}j_l(k(\eta_0-\eta))/10^{-3}$")
+    plt.xlabel("x",fontsize=30)
+    plt.ylabel(r"$\tilde{S}j_l(k(\eta_0-\eta))/10^{-3}$",fontsize=30)
     plt.show()
 
 
@@ -182,8 +214,8 @@ if __name__ == "__main__":
         Theta = read_file(output_path+filename)
         plt.plot(ks[:2500],Theta[:2500],label="l=%s"%l)
     plt.legend(loc="best")
-    plt.xlabel(r"$kc/H_0$")
-    plt.ylabel(r"$\Theta_l$")
+    plt.xlabel(r"$kc/H_0$",fontsize=30)
+    plt.ylabel(r"$\Theta_l$",fontsize=30)
     plt.xlim(0,500)
     plt.ylim(-.025,.025)
     plt.show()
@@ -194,8 +226,8 @@ if __name__ == "__main__":
         Theta = read_file(output_path+filename)
         plt.plot(ks[:2000],l*Theta[:2000]**2/(ks[:2000]),label="l=%s"%l)
     plt.legend(loc="best")
-    plt.xlabel(r"$kc/H_0$")
-    plt.ylabel(r"$l\Theta_l^2/k \cdot H_0/c$")
+    plt.xlabel(r"$kc/H_0$",fontsize=30)
+    plt.ylabel(r"$l\Theta_l^2/k \cdot H_0/c$",fontsize=30)
     plt.xlim(0,400)
     plt.ylim(0,0.0002)
     plt.show()
