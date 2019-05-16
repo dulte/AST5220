@@ -46,7 +46,7 @@ contains
     allocate(x_hires(n_x_full_size))
     allocate(k_hires(n_k_full_size))
 
-    filename = "output/milestone4/source.bin"
+    filename = "output/milestone4/source_bf_7.bin"
     inquire(file=filename,exist=exist)
     if(exist .and. (.not. calc_source)) then
       write(*,*) "Reading Source Function"
@@ -160,10 +160,21 @@ contains
           integrand(i) = S(i,j)*splint(z_spline,j_l(:,l),j_l2(:,l),k_hires(j)*(eta0_min_eta(i)))
           
         end do
-        
-        Theta(l,j) = (sum(integrand) - 0.5d0*(integrand(1) - integrand(n_x_full_size)))*(x_hires(n_x_full_size) - x_hires(1))/real(n_x_full_size - 1.d0)
+        Theta(l,j) = trapz(x_hires, integrand)
+        !Theta(l,j) = (sum(integrand) - 0.5d0*(integrand(1) - integrand(n_x_full_size)))*(x_hires(n_x_full_size) - x_hires(1))/real(n_x_full_size - 1.d0)
         
       end do
+
+
+      ! ############################
+      ! For saving transfer function
+      ! ############################
+      ! if(ls(l)==2 .or. ls(l)==200 .or. ls(l)==400 .or. ls(l)==800 .or. ls(l)==1000 .or. ls(l)==1200) then
+      !   write(filename,'(a,i0,a)') 'output/milestone4/transfer_l_',ls(l),'.dat'
+      !   open(11, file=filename)
+      !   write(11,*) Theta(l,:)
+      !   close(11)
+      ! end if
 
        ! Task: Integrate P(k) * (Theta_l^2 / k) over k to find un-normalized C_l's
        ! Task: Store C_l in an array. Optionally output to file
@@ -201,7 +212,7 @@ contains
     end do
 
     write(*,*) "Saving to file"
-    open(1,file="output/milestone4/cls.dat")
+    open(1,file="output/milestone4/cls_bf_7.dat")
     open(2,file="output/milestone4/ls.dat")
 
     write(1,*) cls_hires
@@ -215,5 +226,19 @@ contains
 
 
   end subroutine compute_cls
+
+
+  pure function trapz(x, y) result(r)
+  !! Calculates the integral of an array y with respect to x using the trapezoid
+  !! approximation. Note that the mesh spacing of x does not have to be uniform.
+  real(dp), intent(in)  :: x(:)         !! Variable x
+  real(dp), intent(in)  :: y(size(x))   !! Function y(x)
+  real(dp)              :: r            !! Integral ∫y(x)·dx
+
+  ! Integrate using the trapezoidal rule
+  associate(n => size(x))
+    r = sum((y(1+1:n-0) + y(1+0:n-1))*(x(1+1:n-0) - x(1+0:n-1)))/2
+  end associate
+end function
   
 end module cl_mod
