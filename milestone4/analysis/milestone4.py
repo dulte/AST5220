@@ -10,6 +10,9 @@ sns.set_context("talk")
 plt.rc('xtick', labelsize=20)
 plt.rc('ytick', labelsize=20)
 
+font_size = 35
+legend_font_size = 25
+
 
 
 def read_file(name):
@@ -69,15 +72,15 @@ def normalize_cl(cl,cl_default):
 
 
 def plot_default_againts_other(ls,cl_default,cl_up,cl_down,observed,observed_lim,up_label,down_label,title):
-    plt.errorbar(ls,observed,yerr=observed_lim,label="Observed")
+    #plt.errorbar(ls,observed,yerr=observed_lim,label="Observed")
     
-    plt.plot(ls,cl_default,label="default")
+    plt.plot(ls,cl_default,"--",label="Default")
     plt.plot(ls,cl_up,label=up_label)
     plt.plot(ls,cl_down,label=down_label)
-    plt.title(title,fontsize=30)
-    plt.xlabel(r"$l$",fontsize=30)
-    plt.ylabel(r"$C_l\cdot l(l+1)/2\pi [\mu K^2]$",fontsize=30)
-    plt.legend(loc="best",fontsize=20)
+    plt.title(title,fontsize=font_size)
+    plt.xlabel(r"$l$",fontsize=font_size)
+    plt.ylabel(r"$C_l\cdot l(l+1)/2\pi [\mu K^2]$",fontsize=font_size)
+    plt.legend(loc="best",fontsize=legend_font_size)
     plt.show()
 
 
@@ -104,10 +107,10 @@ if __name__ == "__main__":
     plt.errorbar(ls,Dl,yerr=Dl_limits,label="Observed")
     
     plt.plot(ls,cl_default_normed,label="default")
-    plt.title(r"$C_l$ for simulation and observations",fontsize=30)
-    plt.xlabel(r"$l$",fontsize=30)
-    plt.ylabel(r"$C_l\cdot l(l+1)/2\pi [\mu K^2]$",fontsize=30)
-    plt.legend(loc="best",fontsize=20)
+    plt.title(r"$C_l$ for simulation and observations",fontsize=font_size)
+    plt.xlabel(r"$l$",fontsize=font_size)
+    plt.ylabel(r"$C_l\cdot l(l+1)/2\pi [\mu K^2]$",fontsize=font_size)
+    plt.legend(loc="best",fontsize=font_size)
     
     plt.show()
 
@@ -180,10 +183,10 @@ if __name__ == "__main__":
     plt.plot(ls,cl_best_2,label=r"$\Omega_b = 0.055, \Omega_m = 0.18, n_s = 0.9$")
     plt.plot(ls,cl_best_6,label=r"$\Omega_b = 0.06, \Omega_m = 0.18, n_s = 0.85$")
     plt.plot(ls,cl_best_7,label=r"$\Omega_b = 0.065, \Omega_m = 0.20, n_s = 0.80$")
-    plt.title(r"$C_l$ for Best Fit",fontsize=30)
-    plt.xlabel(r"$l$",fontsize=30)
-    plt.ylabel(r"$C_l\cdot l(l+1)/2\pi [\mu K^2]$",fontsize=30)
-    plt.legend(loc="best",fontsize=20)
+    plt.title(r"$C_l$ for Best Fit",fontsize=font_size)
+    plt.xlabel(r"$l$",fontsize=font_size)
+    plt.ylabel(r"$C_l\cdot l(l+1)/2\pi [\mu K^2]$",fontsize=font_size)
+    plt.legend(loc="best",fontsize=legend_font_size)
     plt.show()
 
 
@@ -192,13 +195,14 @@ if __name__ == "__main__":
     # For plotting Source function times Bessel
     sjl = read_file(output_path+"sjl.dat")
     x = read_file(output_path+"x.dat")
-
+    
+    
 
     plt.plot(x,sjl/1e-3)
     plt.xlim(-8,0)
     plt.ylim(-3,2)
-    plt.xlabel("x",fontsize=30)
-    plt.ylabel(r"$\tilde{S}j_l(k(\eta_0-\eta))/10^{-3}$",fontsize=30)
+    plt.xlabel("x",fontsize=font_size)
+    plt.ylabel(r"$\tilde{S}j_l(k(\eta_0-\eta))/10^{-3}$",fontsize=font_size)
     plt.show()
 
 
@@ -208,28 +212,33 @@ if __name__ == "__main__":
     h0 = 0.7
     Mpc = 3.08568025e22
     H_0 = h0 * 100.0 * 1e3 / Mpc
+    
+    
 
-    for l in [2,200,400,800,1000,1200]:
+
+
+    for l in [6,200,400,800,1000,1200]:
         filename = "transfer_l_%s.dat" %l
         Theta = read_file(output_path+filename)
         plt.plot(ks[:2500],Theta[:2500],label="l=%s"%l)
-    plt.legend(loc="best")
-    plt.xlabel(r"$kc/H_0$",fontsize=30)
-    plt.ylabel(r"$\Theta_l$",fontsize=30)
+    plt.legend(loc="best",fontsize=legend_font_size)
+    plt.xlabel(r"$kc/H_0$",fontsize=font_size)
+    plt.ylabel(r"$\Theta_l$",fontsize=font_size)
     plt.xlim(0,500)
-    plt.ylim(-.025,.025)
+    #plt.ylim(-.025,.025)
+    plt.ylim(-.01,.03)
     plt.show()
 
 
-    for l in [2,200,400,800,1000,1200]:
+    for l in [6,200,400,800,1000,1200]:
         filename = "transfer_l_%s.dat" %l
         Theta = read_file(output_path+filename)
-        plt.plot(ks[:2000],l*Theta[:2000]**2/(ks[:2000]),label="l=%s"%l)
-    plt.legend(loc="best")
-    plt.xlabel(r"$kc/H_0$",fontsize=30)
-    plt.ylabel(r"$l\Theta_l^2/k \cdot H_0/c$",fontsize=30)
+        plt.plot(ks[:2000],l*(l+1)*Theta[:2000]**2/(ks[:2000]),label="l=%s"%l)
+    plt.legend(loc="best",fontsize=legend_font_size)
+    plt.xlabel(r"$kc/H_0$",fontsize=font_size)
+    plt.ylabel(r"$l(l+1)\Theta_l^2/k \cdot H_0/c$",fontsize=font_size)
     plt.xlim(0,400)
-    plt.ylim(0,0.0002)
+    plt.ylim(0,0.1)
     plt.show()
 
 

@@ -76,12 +76,6 @@ subroutine get_hires_source_function(k_out, x_out, S)
   
   do i = 1, n_t+n_before
 
-    ! #############
-    ! To myself:
-    ! Fortran seems to be vectorized, so might be able to calculate many of the
-    ! arrays (especially the x dependent ones) without the loops!
-    ! #############
-
     ! Precalcs all x dependent quantities
     x_temp = x(i)
     
@@ -96,15 +90,9 @@ subroutine get_hires_source_function(k_out, x_out, S)
     H_p = get_H_p(x_temp)
     dH_p = get_dH_p(x_temp)
 
-    
-    
-    !dy = -3.d0*(Omega_b+Omega_m)*exp(-3.d0*x_temp) - 4.d0*Omega_r*exp(-4.d0*x_temp)
-    !ddy = 9.d0*(Omega_b+Omega_m)*exp(-3.d0*x_temp) + 16.d0*Omega_r*exp(-4.d0*x_temp)
-
-    !Calc this yourself!
     ddHH_p = H_0**2.d0/2.d0*((Omega_b+Omega_m)*exp(-x_temp) + 4.d0*Omega_r*exp(-2.d0*x_temp) + 4.d0*Omega_lambda*exp(2.d0*x_temp))
     
-    !dH_p**2.d0 + dH_p + H_0**2.d0*(ddy/(2.d0*get_H(x_temp)) - (dy*H_0)**2.d0/(4.d0*get_H(x_temp)**3.d0))
+
 
     do j = 1, n_k
       k = ks(j)
@@ -125,11 +113,11 @@ subroutine get_hires_source_function(k_out, x_out, S)
     end do
   end do
 
-  
+  ! Makes the high res arrays
   x_out = [(x(1) + (x(n_before+n_t) - x(1))/float(n_x_full_size-1)*float(i-1),i=1,n_x_full_size)]
-
   k_out = [(k_min + (k_max-k_min)*float(i-1)/float(n_k_full_size-1),i=1,n_k_full_size)]
 
+  ! Splines and retures the high res source function
   call splie2_full_precomp(x(1:n_t+n_before), ks,S_lores,coeff)
 
   do i=1, n_x_full_size
@@ -151,6 +139,13 @@ end subroutine get_hires_source_function
     ! Task: Initialize k-grid, ks; quadratic between k_min and k_max
     allocate(ks(n_k))
     ks = [(k_min + (k_max-k_min)*(float(i-1)/float(n_k-1))**2.d0,i=1,n_k)]
+
+
+    ! ####################################################
+    ! For the plots in milestone 3, change n_k to 6, and 
+    ! uncomment the ks below!
+    ! ####################################################
+
     !ks(1) = 0.1 * H_0 / c
     !ks(2) = 8.36 * H_0 / c
     !ks(3) = 85.9 * H_0 / c
@@ -219,7 +214,6 @@ end subroutine get_hires_source_function
     integer(i4b) :: n1, n2, index_tc
 
     real(dp), allocatable, dimension(:) :: y, y_tight_coupling, dydx
-    real(dp), allocatable, dimension(:) :: x_before_tc,x_after
   
 
 
@@ -235,7 +229,7 @@ end subroutine get_hires_source_function
     ! But it shouldn't make any difference later
     ! ##########################################
     x_init = log(a_init)
-    eps    = 1.d-8 !Change back to -8! 
+    eps    = 1.d-8 
     hmin   = 0.d0
 
     n1          = 200                                   ! Number of grid points during recombination
@@ -269,8 +263,6 @@ end subroutine get_hires_source_function
     allocate(y(npar))
     allocate(dydx(npar))
     allocate(y_tight_coupling(7))
-    allocate(x_before_tc(1000))
-    allocate(x_after(0:n_t))
 
 
     ! ################################
@@ -283,12 +275,14 @@ end subroutine get_hires_source_function
        write(*,*) "Starting to Integrate mode ", k, ". With k = ", ks(k)/(H_0/c)
 
        k_current = ks(k)  ! Store k_current as a global module variable
-       h1        = 1.d-5 ! Change back to -5!!
+       h1        = 1.d-5 
 
 
        ! Find the time to which tight coupling is assumed, 
        ! and integrate equations to that time
        
+
+       ! Finds the time of the end of tight decoupling
        x_tc =  get_tight_coupling_time(k_current,index_tc)
        write(*,*) "x_tc =", x_tc
 
@@ -374,7 +368,7 @@ end subroutine get_hires_source_function
     get_tight_coupling_time = x_end  !Default values
     index = n_before
 
-    ! Finds the correct x_tc and index. This could be done in one if test...
+    ! Finds the correct x_tc and index. This could be done in one if-test...
     do i =0, n_before
       
       if (abs(get_dtau(x(i)))<10) then 
@@ -421,7 +415,7 @@ end subroutine get_hires_source_function
     do l = 0, lmax_int
       Theta(i,l,k) = y(6+l)
     end do
-    Psi(i,k)     = -y(5) - (12.d0*H_0**2.d0)/(c*c*k_current*k_current*exp(2.d0*x))*Omega_r*y(8) !Temp: May have to use evolving version of Omega_r
+    Psi(i,k)     = -y(5) - (12.d0*H_0**2.d0)/(c*c*k_current*k_current*exp(2.d0*x))*Omega_r*y(8) 
 
     ! Task: Store derivatives that are required for C_l estimation
 
@@ -430,7 +424,7 @@ end subroutine get_hires_source_function
     dPhi(i,k)     = dydx(5)
     dv_b(i,k)     = dydx(4)
     dTheta(i,:,k) = dydx(6:lmax_int)
-    dPsi(i,k)     = -dPhi(i,k) - Omega_r*(12.d0*H_0**2.d0)/(c*c*k_current*k_current*exp(2.d0*x))*(dTheta(i,2,k)-2.d0*Theta(i,2,k)) !Temp: Find out how to do this
+    dPsi(i,k)     = -dPhi(i,k) - Omega_r*(12.d0*H_0**2.d0)/(c*c*k_current*k_current*exp(2.d0*x))*(dTheta(i,2,k)-2.d0*Theta(i,2,k)) 
 
 
   end subroutine save_to_arrays
@@ -454,7 +448,7 @@ end subroutine get_hires_source_function
     do l = 0, lmax_int
       Theta(i,l,k) = y(6+l)
     end do
-    Psi(i,k)     = -y(5) - (12.d0*H_0**2.d0)/(c*c*k_current*k_current*exp(2.d0*x))*Omega_r*y(8) !Temp: May have to use evolving version of Omega_r
+    Psi(i,k)     = -y(5) - (12.d0*H_0**2.d0)/(c*c*k_current*k_current*exp(2.d0*x))*Omega_r*y(8) 
 
     ! Task: Store derivatives that are required for C_l estimation
 
@@ -471,7 +465,7 @@ end subroutine get_hires_source_function
     do l = 3, lmax_int
       dTheta(i,l,k) = 1.d0/(2.d0*l + 1.d0)*c*k_current*get_H_p(x)*dTheta(i,l-1,k) - (l+1.d0)/(2.d0*l + 1.d0)*c*k_current*get_H_p(x)*dTheta(i,l+1,k) + get_dtau(x)*Theta(i,l,k)
     end do 
-    dPsi(i,k)     = -dPhi(i,k) - Omega_r*(12.d0*H_0**2.d0)/(c*c*k_current*k_current*exp(2.d0*x))*(dTheta(i,2,k)-2.d0*Theta(i,2,k)) !Temp: Find out how to do this
+    dPsi(i,k)     = -dPhi(i,k) - Omega_r*(12.d0*H_0**2.d0)/(c*c*k_current*k_current*exp(2.d0*x))*(dTheta(i,2,k)-2.d0*Theta(i,2,k)) 
 
 
   end subroutine save_to_arrays_tc
@@ -481,6 +475,8 @@ end subroutine get_hires_source_function
   ! Subroutines needed for the integration
   ! ##############################################
 
+
+  ! Derivatives during tight decoupling
   subroutine derivs_tight_coupling(x, y, dydx)
     !use healpix_types
     implicit none
@@ -488,7 +484,7 @@ end subroutine get_hires_source_function
     real(dp), dimension(:), intent(in)  :: y
     real(dp), dimension(:), intent(out) :: dydx
 
-    real(dp)                            :: Psi, R, q, Theta_2, H_p, dtau, ck, ck_H
+    real(dp)                            :: Psi, R, q, Theta_2, H_p, dtau, ck, ck_H, delta,delta_b,v,v_b,Phi,Theta0,Theta1, Theta2
     
 
     ! Calculates the different derivatives
@@ -498,28 +494,39 @@ end subroutine get_hires_source_function
     ck_H = ck/H_p
 
 
+    delta = y(1)
+    delta_b = y(2)
+    v = y(3)
+    v_b = y(4)
+    Phi = y(5)
+    Theta0 = y(6)
+    Theta1 = y(7)
+    Theta2 = y(8)
+
+
     R           = (4.d0*Omega_r)/(3.d0*Omega_b*exp(x)) 
 
-    Theta_2     = -(20.d0*ck_H)/(45.d0*dtau)*y(7)
+    Theta_2     = -(20.d0*ck_H)/(45.d0*dtau)*Theta1
 
-    Psi         = -y(5) - (12.d0*H_0**2.d0)/(ck*ck*exp(2.d0*x))*Omega_r*Theta_2 
-    dydx(5)        = Psi - (ck*ck)/(3.d0*H_p**2.d0)*y(5) + H_0**2.d0/(2.d0*H_p**2.d0)*(Omega_m*exp(-x)*y(1)+Omega_b*exp(-x)*y(2)+4.d0*Omega_r*exp(-2.d0*x)*y(6))
+    Psi         = -Phi - (12.d0*H_0**2.d0)/(ck*ck*exp(2.d0*x))*Omega_r*Theta_2 
+    dydx(5)        = Psi - (ck*ck)/(3.d0*H_p**2.d0)*Phi + H_0**2.d0/(2.d0*H_p**2.d0)*(Omega_m*exp(-x)*delta+Omega_b*exp(-x)*delta_b+4.d0*Omega_r*exp(-2.d0*x)*Theta0)
 
-    dydx(1)      = ck_H*y(3) - 3.d0*dydx(5)
-    dydx(2)    = ck_H*y(4) - 3.d0*dydx(5)
+    dydx(1)      = ck_H*v - 3.d0*dydx(5)
+    dydx(2)    = ck_H*v_b - 3.d0*dydx(5)
 
-    dydx(6)    = -ck_H*y(7) - dydx(5)
+    dydx(6)    = -ck_H*Theta1 - dydx(5)
     
 
-    q           = (-(dtau*(1.d0-2.d0*R)+(1.d0 + R)*get_ddtau(x))*(3.d0*y(7)+y(4)) - ck_H*Psi + ck_H*(1-get_dH_p(x)/H_p)*(2.d0*Theta_2-y(6)) - ck_H*dydx(6))/((1.d0+R)*dtau - 1.d0 + get_dH_p(x)/H_p)
+    q           = (-(dtau*(1.d0-2.d0*R)+(1.d0 + R)*get_ddtau(x))*(3.d0*Theta1+v_b) - ck_H*Psi + ck_H*(1-get_dH_p(x)/H_p)*(2.d0*Theta_2-Theta0) - ck_H*dydx(6))/((1.d0+R)*dtau - 1.d0 + get_dH_p(x)/H_p)
 
-    dydx(3)          = -y(3) - ck_H*Psi
-    dydx(4)        = (1.d0/(1.d0 + R))*(-y(4) - ck_H*Psi + R*(q + ck_H*(2.d0*Theta_2-y(6)) - ck_H*Psi))
+    dydx(3)          = -v - ck_H*Psi
+    dydx(4)        = (1.d0/(1.d0 + R))*(-v_b - ck_H*Psi + R*(q + ck_H*(2.d0*Theta_2-Theta0) - ck_H*Psi))
 
     dydx(7)    = 1.d0/3.d0*(q - dydx(4))
     
   end subroutine derivs_tight_coupling
 
+  ! Derivatives after tight decoupling
   subroutine derivs_after_decoupling(x, y, dydx)
     !use healpix_types
     implicit none
@@ -528,7 +535,7 @@ end subroutine get_hires_source_function
     real(dp), dimension(:), intent(out) :: dydx
 
     
-    real(dp)                            :: Psi, R, H_p, dtau,ck,ck_H 
+    real(dp)                            :: Psi, R, H_p, dtau,ck,ck_H, delta,delta_b,v,v_b,Phi,Theta0,Theta1, Theta2
     integer(i4b)                        :: l
     
     ! Calculates the different derivatives
@@ -538,20 +545,30 @@ end subroutine get_hires_source_function
     ck = c*k_current
     ck_H = ck/H_p
 
+
+    delta = y(1)
+    delta_b = y(2)
+    v = y(3)
+    v_b = y(4)
+    Phi = y(5)
+    Theta0 = y(6)
+    Theta1 = y(7)
+    Theta2 = y(8)
+
     R                 = (4.d0*Omega_r)/(3.d0*Omega_b*exp(x)) 
-    Psi               = -y(5) - (12.d0*H_0**2.d0)/(ck*ck*exp(2.d0*x))*Omega_r*y(8) 
-    dydx(5)           = Psi - (ck*ck)/(3.d0*H_p**2.d0)*y(5) + H_0**2.d0/(2.d0*H_p**2.d0)*(Omega_m*exp(-x)*y(1)+Omega_b*exp(-x)*y(2)+4.d0*Omega_r*exp(-2.d0*x)*y(6))
+    Psi               = -Phi - (12.d0*H_0**2.d0)/(ck*ck*exp(2.d0*x))*Omega_r*Theta2 
+    dydx(5)           = Psi - (ck*ck)/(3.d0*H_p**2.d0)*Phi + H_0**2.d0/(2.d0*H_p**2.d0)*(Omega_m*exp(-x)*delta+Omega_b*exp(-x)*delta_b+4.d0*Omega_r*exp(-2.d0*x)*Theta0)
 
-    dydx(2)           = ck_H*y(4) - 3.d0*dydx(5) 
-    dydx(1)           = ck_H*y(3) - 3.d0*dydx(5) 
+    dydx(2)           = ck_H*v_b - 3.d0*dydx(5) 
+    dydx(1)           = ck_H*v - 3.d0*dydx(5) 
 
-    dydx(3)           = -y(3) - ck_H*Psi
-    dydx(4)           = -y(4) - ck_H*Psi + R*dtau*(3.d0*y(7)+y(4))
+    dydx(3)           = -v - ck_H*Psi
+    dydx(4)           = -v_b - ck_H*Psi + R*dtau*(3.d0*Theta1+v_b)
 
-    dydx(6)           = -ck_H*y(7) - dydx(5) 
-    dydx(7)           = (ck_H)/(3.d0)*y(6) - ck_H*(2.d0)/(3.d0)*y(8) +(ck_H)/(3.d0)*Psi + dtau*(y(7) + 1.d0/3.d0 * y(4))
+    dydx(6)           = -ck_H*Theta1 - dydx(5) 
+    dydx(7)           = (ck_H)/(3.d0)*Theta0 - ck_H*(2.d0)/(3.d0)*Theta2 +(ck_H)/(3.d0)*Psi + dtau*(Theta1 + 1.d0/3.d0 * y(4))
 
-    dydx(8)           = ck_H*(2.d0)/((2.d0*2.d0 + 1.d0))*y(7) - ck_H*((2.d0+1.d0))/((2.d0*2.d0 + 1.d0))*y(9)  + dtau*(y(8) - 1.d0/10.d0*y(8))
+    dydx(8)           = ck_H*(2.d0)/((2.d0*2.d0 + 1.d0))*Theta1 - ck_H*((2.d0+1.d0))/((2.d0*2.d0 + 1.d0))*y(9)  + dtau*(Theta2 - 1.d0/10.d0*Theta2)
 
     do l = 3, lmax_int-1
       dydx(6+l)       = ck_H*(l)/((2.d0*l + 1.d0))*y(6+l-1) - ck_H*((l+1.d0))/((2.d0*l + 1.d0))*y(6+l+1) + dtau*(y(6+l))
