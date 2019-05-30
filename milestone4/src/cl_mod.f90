@@ -11,7 +11,7 @@ contains
     implicit none
 
     logical(lgt), intent(in)                      :: calc_source
-    integer(i4b)                                  :: i, j, l, l_num, x_num, n_spline, l_num_hires, n_k_full_size, n_x_full_size
+    integer(i4b)                                  :: i, j, l, l_num, x_num, n_spline, l_num_hires
     real(dp)                                      :: dx, S_func, j_func, z, eta, eta0, x0, x_min, x_max, d, e
     integer(i4b), allocatable, dimension(:)       :: ls
     real(dp),     allocatable, dimension(:)       :: integrand, ls_hires
@@ -36,23 +36,56 @@ contains
          & 120, 140, 160, 180, 200, 225, 250, 275, 300, 350, 400, 450, 500, 550, &
          & 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100, 1150, 1200 /)
 
-    n_k_full_size = 5000
-    n_x_full_size = 5000
 
     
+    n_spline = 5400
+    l_num_hires = 1200
+    
+    ! ##############################
+    ! Allocates the necessary arrays
+    ! ##############################
 
-    ! Task: Get source function from evolution_mod
+    !Arrays for the Bessel functions
+    allocate(z_spline(n_spline))    ! Note: z is *not* redshift, but simply the dummy argument of j_l(z)
+    allocate(j_l(n_spline, l_num))
+    allocate(j_l2(n_spline, l_num))
+
+    ! Arrays for the intgrations
+    allocate(Theta(l_num,n_k_full_size))
+    allocate(integrand(n_x_full_size))
+    allocate(eta0_min_eta(n_x_full_size))
+    allocate(cls(l_num))
+
+
+    ! Arrays for splining C_l
+    allocate(cls2(l_num))
+    allocate(cls_hires(l_num_hires))
+    allocate(ls_hires(l_num_hires))
+    allocate(ls_dp(l_num))
+
+    ! Arrays for the source function
     allocate(S(n_x_full_size,n_k_full_size))
     allocate(x_hires(n_x_full_size))
     allocate(k_hires(n_k_full_size))
 
-    filename = "output/milestone4/source_bf_7.bin"
+  
+
+    ! #################################################
+    ! Since my code is slow, this saves the source 
+    ! function, so that I can rerun the calculations
+    ! of the transfer function, C_l's, etc.
+    ! If no file with the given name is found, a new
+    ! one is made using the function from evolution mod
+    ! #################################################
+
+    filename = "output/milestone4/source_default.bin"
     inquire(file=filename,exist=exist)
     if(exist .and. (.not. calc_source)) then
       write(*,*) "Reading Source Function"
       open(1,file=filename,form="unformatted")
       read(1) k_hires, x_hires, S
       close(1)
+  
     else
       write(*,*) "Calculating Source Function"
       write(*,*) "Integrating pertubation"
@@ -63,24 +96,37 @@ contains
       call get_hires_source_function(k_hires, x_hires, S)
 
       open(1,file=filename,form="unformatted")
-      write(1)  k_hires, x_hires, S
+      write(1) k_hires, x_hires, S
       close(1)
     end if
 
+
+
+
+
     
 
+    ! #########################################
+    ! Fill arrays necessary for the integration
+    ! And the Bessel functions
+    ! #########################################
 
-    ! Task: Initialize spherical Bessel functions for each l; use 5400 sampled points between 
-    !       z = 0 and 3500. Each function must be properly splined
-    ! Hint: It may be useful for speed to store the splined objects on disk in an unformatted
-    !       Fortran (= binary) file, so that these only has to be computed once. Then, if your
-    !       cache file exists, read from that; if not, generate the j_l's on the fly.
-    n_spline = 5400
-    allocate(z_spline(n_spline))    ! Note: z is *not* redshift, but simply the dummy argument of j_l(z)
-    allocate(j_l(n_spline, l_num))
-    allocate(j_l2(n_spline, l_num))
+    ! Variable for the Bessel functions
+    z_spline = [((3500.d0 -0.d0)/(n_spline-1.d0)*(i-1.d0),i=1,n_spline)]
 
-    z_spline = [((3500.d0 -1.d0)/(n_spline-1.d0)*i,i=1,n_spline)]
+    ! Precalculated array for eta_0 - eta, for faster integration
+    eta0_min_eta = [(get_eta(0.d0)-get_eta(x_hires(i)), i=1,n_x_full_size)]
+
+
+ 
+
+
+
+    ! #################################################
+    ! As with the source function, the Bessel functions
+    ! are loaded, or made if the file does not exist
+    ! #################################################
+    
 
     filename = "output/milestone4/jl.bin"
     inquire(file=filename,exist=exist)
@@ -93,16 +139,15 @@ contains
       write(*,*) "Could not find file for the Bessel Functions, will calculate and write"
       ! Calculating j_l and j_l2
 
-    
+      
       do l=1, l_num
-        j_l(l,1) = 0.d0
-        do i=2, n_spline
-          call sphbes(ls(l), z_spline(i),j_l(i,l))
+        
+        do i=1, n_spline
+          if (z_spline(i) > 0.d0) then
+            call sphbes(ls(l), z_spline(i),j_l(i,l))
+          end if
         end do
-        !call spline(z_spline,j_l(:,l),1.d30,1.d30,j_l2(:,l))
-      end do
-
-      do l=1, l_num
+        
         call spline(z_spline,j_l(:,l),1.d30,1.d30,j_l2(:,l))
       end do
 
@@ -112,21 +157,11 @@ contains
     end if
 
 
-    ! Overall task: Compute the C_l's for each given l
-
-    allocate(Theta(l_num,n_k_full_size))
-    allocate(integrand(n_x_full_size))
-    allocate(eta0_min_eta(n_x_full_size))
-    allocate(cls(l_num))
-
-    eta0_min_eta = [(get_eta(0.d0)-get_eta(x_hires(i)), i=1,n_x_full_size)]
-
-
     ! ########################################################
     ! Before integrating, we start with a sanity check of S*Jl
     ! ########################################################
 
-
+    ! Finds the same k and l as in Callin
     j = locate_dp(k_hires, 340.d0*H_0/c)
     l = 17
 
@@ -141,6 +176,7 @@ contains
     open(4, file="output/milestone4/x.dat")
     write(4,*) x_hires
     close(4)
+   
 
 
     ! #########################################
@@ -160,8 +196,7 @@ contains
           integrand(i) = S(i,j)*splint(z_spline,j_l(:,l),j_l2(:,l),k_hires(j)*(eta0_min_eta(i)))
           
         end do
-        Theta(l,j) = trapz(x_hires, integrand)
-        !Theta(l,j) = (sum(integrand) - 0.5d0*(integrand(1) - integrand(n_x_full_size)))*(x_hires(n_x_full_size) - x_hires(1))/real(n_x_full_size - 1.d0)
+        Theta(l,j) = sum(integrand)*(x_hires(n_x_full_size) - x_hires(1))/(n_x_full_size-1.d0)
         
       end do
 
@@ -169,12 +204,12 @@ contains
       ! ############################
       ! For saving transfer function
       ! ############################
-      ! if(ls(l)==2 .or. ls(l)==200 .or. ls(l)==400 .or. ls(l)==800 .or. ls(l)==1000 .or. ls(l)==1200) then
-      !   write(filename,'(a,i0,a)') 'output/milestone4/transfer_l_',ls(l),'.dat'
-      !   open(11, file=filename)
-      !   write(11,*) Theta(l,:)
-      !   close(11)
-      ! end if
+      if(ls(l)==6 .or. ls(l)==200 .or. ls(l)==400 .or. ls(l)==800 .or. ls(l)==1000 .or. ls(l)==1200) then
+        write(filename,'(a,i0,a)') 'output/milestone4/transfer_l_',ls(l),'.dat'
+        open(11, file=filename)
+        write(11,*) Theta(l,:)
+        close(11)
+      end if
 
        ! Task: Integrate P(k) * (Theta_l^2 / k) over k to find un-normalized C_l's
        ! Task: Store C_l in an array. Optionally output to file
@@ -191,14 +226,15 @@ contains
 
     ! Task: Spline C_l's found above, and output smooth C_l curve for each integer l
 
+
+    ! ###############################################
+    ! Makes the high res arrays and splines
+    ! ###############################################
+
     write(*,*) "Done finding C_l, now spling"
-    l_num_hires = 1200
-    allocate(cls2(l_num))
-    allocate(cls_hires(l_num_hires))
-    allocate(ls_hires(l_num_hires))
-    allocate(ls_dp(l_num))
+    
     write(*,*) "Making ls_hires"
-    ls_hires = [(l,l=1,l_num_hires)]![(ls(1) + (ls(l_num)-ls(1))/(l_num_hires-1.d0)*float(i-1),i=1,l_num_hires)]
+    ls_hires = [(l,l=1,l_num_hires)]
     write(*,*) "Making ls_dp"
     ls_dp = [(ls(i),i=1,l_num)]
     
@@ -212,7 +248,7 @@ contains
     end do
 
     write(*,*) "Saving to file"
-    open(1,file="output/milestone4/cls_bf_7.dat")
+    open(1,file="output/milestone4/cls_default.dat")
     open(2,file="output/milestone4/ls.dat")
 
     write(1,*) cls_hires
@@ -226,19 +262,5 @@ contains
 
 
   end subroutine compute_cls
-
-
-  pure function trapz(x, y) result(r)
-  !! Calculates the integral of an array y with respect to x using the trapezoid
-  !! approximation. Note that the mesh spacing of x does not have to be uniform.
-  real(dp), intent(in)  :: x(:)         !! Variable x
-  real(dp), intent(in)  :: y(size(x))   !! Function y(x)
-  real(dp)              :: r            !! Integral ∫y(x)·dx
-
-  ! Integrate using the trapezoidal rule
-  associate(n => size(x))
-    r = sum((y(1+1:n-0) + y(1+0:n-1))*(x(1+1:n-0) - x(1+0:n-1)))/2
-  end associate
-end function
   
 end module cl_mod
