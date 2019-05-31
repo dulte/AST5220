@@ -46,7 +46,7 @@
 \maketitle
 
 \section{Introduction}
-In the previous milestones we found how the Universe expands, and how the coupling of electrons and photons influences the free mean path -- optical thickness $\tau$ -- of the photons. This means that we are ready to look at how initial perturbations in the Universe evolve. We will do this by integrating the Einstein-Boltzmann equations (see sec. \ref{sec:theory}) from an initial time deep in the radiation dominated era, well before decoupling, until today. Having integrated these equation for the scalar metric perturbations $\Phi$ and $\Psi$, the density perturbations of dark matter and baryons $\delta$ and $\delta_b$ and the velocity of dark matter and baryons $v$ and $v_b$, we can look at the different Fourier scales and learn how different scales are affected.
+In the previous milestones we found how the Universe expands, and how the coupling of electrons and photons influences the free mean path -- optical depth $\tau$ -- of the photons. This means that we are ready to look at how initial perturbations in the Universe evolve. We will do this by integrating the Einstein-Boltzmann equations (see sec. \ref{sec:theory}) from an initial time deep in the radiation dominated era, well before decoupling, until today. Having integrated these equation for the scalar metric perturbations $\Phi$ and $\Psi$, the density perturbations of dark matter and baryons $\delta$ and $\delta_b$, the velocity of dark matter and baryons $v$ and $v_b$ and the different momenta of the temperature fluctuation $\Theta_l$, we can look at the different Fourier scales and learn how different scales are affected.
 
 \section{Theory}\label{sec:theory}
 
@@ -56,7 +56,7 @@ We are interested in showing, given some initial conditions, how do perturbation
 \begin{equation}
 \frac{df}{dt} = C[f],
 \end{equation}
-where $f$ is the distribution of a given quantity and $C[f]$ is the collision term of the given distribution. The collection of coupled differential equations one gets from these expressions is called the Einstein-Boltzmann equations.
+where $f$ is the distribution of a given quantity and $C[f]$ is the collision term of the given distribution. The collection of differential equations one gets from these expressions and the Einstein equation is called the Einstein-Boltzmann equations.
 
 One can show that the Einstein-Boltzmann equation for the quantities we are interested in is given as
 
@@ -121,7 +121,7 @@ An other ting to notice is that we have defined a $l_{max}$, while $l$ in realit
 
 
 \subsection{Tight Coupling}\label{sec:tight}
-There is one period we need to be careful of. At early times, before recombination, the mean free path of the photons are really small, meaning that $\tau >> 1$. During this time photons are unable to travel far before being scattered by electrons. This makes the photon aware only of a small area around it. This means that the baryons and photons are tightly coupled, behaving more like a single fluid. Due to the coupling, all but the largest perturbation are smoothed out, leaving the fluid in near equilibrium. All momentums of the photon temperatures are therefore negligible, except from $\Theta_0$ and $\Theta_1$. This is all well and fine, except from the fact that we now have a $\tau'$ which is very large multiplied with a factor $3\Theta_1-v_b$ which is very small, leading to numerical instability. This means that we need another way of integrating during this period. One can show that with these limitations we can integrate most of the expressions as before, but need to change $v_b'$ and $\Theta_0'$ to
+There is one period we need to be careful of. At early times, before recombination, the mean free path of the photons are really small, meaning that $\tau >> 1$. During this time photons are unable to travel far before being scattered by electrons. This makes the photon aware only of a small area around it. This means that the baryons and photons are tightly coupled, behaving more like a single fluid. Due to the coupling, all but the largest perturbation are smoothed out, leaving the fluid in near equilibrium. All momentums of the photon temperatures are therefore negligible, except from $\Theta_0$, $\Theta_1$ and $\Theta_2$. This is all well and fine, except from the fact that we now have a $\tau'$ which is very large multiplied with a factor $3\Theta_1-v_b$ which is very small, leading to numerical instability. This means that we need another way of integrating during this period. One can show that with these limitations we can integrate most of the expressions as before, but need to change $v_b'$ and $\Theta_0'$ to
 
 \begin{equation}
 v_b' = \frac{1}{1+R}\left[-v_b - \frac{ck}{\mathcal{H}}\Psi + R(q + \frac{ck}{\mathcal{H}}(-\Theta_0 + 2\Theta_2) - \frac{ck}{\mathcal{H}}\Psi)\right],
@@ -232,7 +232,7 @@ The report was some days late because of me feeling ill for most of the week. I 
 
 
 \todo{Change temperature to temperature fluctuation!}
-\todo{Change to \textit{Optical depth}}
+
 
 
 \begin{thebibliography}{9}
