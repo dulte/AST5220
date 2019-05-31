@@ -68,7 +68,7 @@ where $n_s$ is the spectral index. We can now write the power spectrum as
 \begin{equation}\label{eq:Cl}
 C_l = \int^{\infty}_{0}\left(\frac{ck}{H_0}\right)^{n_s - 1} \Theta_l^2(k) \frac{dk}{k}.
 \end{equation}
-We now need to find the transfer function $\Theta_l$. As the choice of name implies, this is perturbation of the $l^{th}$ momentum we found in milestone 3. The problem is the while we calculated these up to $l = 6$ the CMB spectrum is given for $l>1200$. Calculating all these perturbations with the use of the method in milestone 3 is slow, so we need a faster way. Thanks to Zaldarriaga and Seljak we can calculate the momenta in minutes and not hours. They found the so called \textit{line of sight integration} method. This means that instead of doing a multipole expansion of the temperature, then solve the differential equations, we instead solve the equations and then expand. This means that we can write, after some calculation,
+We now need to find the transfer function $\Theta_l$. As the choice of name implies, this is perturbation of the $l^{th}$ momentum we found in milestone 3. The problem is the while we calculated these up to $l = 6$, the CMB spectrum is given for $l>1200$. Calculating all these perturbations with the use of the method in milestone 3 is slow, so we need a faster way. Thanks to Zaldarriaga and Seljak we can calculate the momenta in minutes and not hours. They found the so called \textit{line of sight integration} method. This means that instead of doing a multipole expansion of the temperature, then solve the differential equations, we instead solve the equations and then expand. This means that we can write, after some calculation,
 
 \begin{equation}\label{eq:Theta}
 \Theta_l(k,x=0) = \int_{-\infty}^{0} \tilde{S}(k,x)j_l(k(\eta_0 - \eta)) dx,
@@ -93,13 +93,13 @@ where (here) $\Pi = \Theta_2$. The expression for $\frac{d}{dx}\left[\mathcal{H}
 \Rightarrow \frac{d}{dx} \mathcal{H}\mathcal{H}' = \frac{H_0^2}{2}\left[(\Omega_{b,0} + \Omega_{m,0})\exp(-x) +4 (\Omega_{r,0} + \Omega_{\nu,0})\exp(-2x) + 4\Omega_{\Lambda,0}\exp(2x)\right]
 \end{equation}
 
-The source function can be thought of a function describing all the different things a photon encounters on our way to us that decreases or increases its energy. The first term describes the Sachs-Wolfe effect -- the loss of energy as a photon climbs out of a gravitational potential --, the second term describes the integrated Sachs-Wolfe effect -- if the gravitational potential have change from when a photon enters to it leaves, this affects its energy --, the third term is the Doppler term, and the fourth a term that corrects a bit for polarization. Notice that the source function only needs temperature momenta up to $\Theta_2$, so we do not need to solve the differential equations for $l$ higher than $2$. In reality, since we use an approximation to find $\Theta_{lmax}'$, there is a small error in the highest momentum. If we solve for $l$ up to $6$ this error is small enough for $\Theta_2$ and below, that the error can be ignored.
+The source function can be thought of a function describing all the different things a photon encounters on its way to us that decreases or increases its energy. The first term describes the Sachs-Wolfe effect -- the loss of energy as a photon climbs out of a gravitational potential --, the second term describes the integrated Sachs-Wolfe effect -- if the gravitational potential have change from when a photon enters to it leaves, this affects its energy --, the third term is the Doppler term, and the fourth a term that corrects a bit for polarization. Notice that the source function only needs temperature momenta up to $\Theta_2$, so we do not need to solve the differential equations for $l$ higher than $2$. In reality, since we use an approximation to find $\Theta_{lmax}'$, there is a small error in the highest momentum. If we solve for $l$ up to $6$ this error is small enough for $\Theta_2$ and below, that the error can be ignored.
 
 \section{Method}
 The method consists of two parts: Calculating the source function and integrating everything to get the final power spectrum.
 
 \subsection{Source Function}
-We want the source function from some initial start time until today. From milestone 3 we have all the quantities we need to calculate $\tilde{S}$, but not with the precision we want. So with our quadratic $k$ grid with $100$ $k$s and our $x$ grid with $500$ points, we can find an initial grid of $\tilde{S}(k,x)$. We can then spline this 2D array. With new, finer $k$ and $x$ grids, both with $5000$ points in the same intervals, we can use the spline to get a new $\tilde{S}$ array with a finer grid. It is these grid we are going to use for the rest of the calculations.
+We want the source function from some initial start time until today. From milestone 3 we have all the quantities we need to calculate $\tilde{S}$, but not with the precision we want. So with our quadratic $k$ grid with $100$ $k$s and our $x$ grid with $500+1000$ points, we can find an initial grid of $\tilde{S}(k,x)$. We can then spline this 2D array. With new, finer $k$ and $x$ grids, both with $5000$ points in the same intervals, we can use the spline to get a new $\tilde{S}$ array with a finer grid. It is these grid we are going to use for the rest of the calculations.
 
 Both $\tilde{S}$ and $j_l$ are saved in binary files, so that if all the calculations below needs to be run multiple times -- for any reason --, we don't need to solve all the differential equations and calculate the Bessel functions again.
 
@@ -108,7 +108,7 @@ To find $\Theta_l$ we see from eq. \eqref{eq:Theta} that we need to find the sph
 
 We can now use eq. \eqref{eq:Theta} to find the transfer functions $\Theta_l$. This integration was done with a simple euler integration. 
 
-We then integrate the $\Theta_l$s with the primordial power spectrum to get the $C_l$s, eq. \eqref{eq:Cl}. This again is done via an Euler Scheme. We start by finding $C_l$ for $44$ $l$s from $1$ to $1200$. We then spline and retrieve a $C_l$ for each $l$ in the same interval. We then normalize as $C_l\cdot l(l+1)/2\pi$, and we have our long sought after power spectrum. 
+We then integrate the $\Theta_l$s with the primordial power spectrum to get the $C_l$s, eq. \eqref{eq:Cl}. This again is done via an Euler Scheme. We start by finding $C_l$ for $44$ $l$s from $2$ to $1200$. We then spline and retrieve a $C_l$ for each $l$ in the same interval. We then normalize as $C_l\cdot l(l+1)/2\pi$, and we have our long sought after power spectrum. 
 
 All the calculation are in the first instance done with a default set of parameters $\Omega_b$, $\Omega_m$, $\Omega_r$, $n_s$ and $h$. With these parameters, the resulting power spectrum are not a good fit for the one observed by the Planck Satellite, so we need to find the correct values for the parameters. This is done by adjusting the parameters one by one and seeing who this affect the power spectrum, this making it possible to infer how we can change the parameters to fit the observed power spectrum.
 
@@ -120,7 +120,7 @@ The first plots we are going to look at source function and the transfer functio
 \begin{figure}
 \centering
 \includegraphics[scale=0.25]{sjl.png}
-\caption{This shows the source function multiplied with the spherical Bessel function for $l=100$ and $k = 340\cdot H_0/c$.}\label{fig:sjl}
+\caption{This shows the source function multiplied with the spherical Bessel function for $l=100$ and $k = 340\cdot H_0/c$. The plot is more or less the same as in Callin \cite{Callin} except from some spikes at $x\approx -0.5$.}\label{fig:sjl}
 \end{figure}
 
 \begin{figure*}[!htbp]
@@ -135,7 +135,7 @@ The first plots we are going to look at source function and the transfer functio
 
 Looking at figure \ref{fig:sjl} we see $\tilde{S}j_l(k(\eta_0 - \eta))$. This is plotted as a sanity check to compare with figure 3 in Callin \cite{callin}. The plot is for $l = 100$ and the closes we can get to $k = 340\cdot H_0/c$.  This is more or less the same plot as Callin got, meaning that we are on the right track. If we look at the transfer function $\Theta_l(k)$ in figure \ref{fig:thetas} we see that the transfer function on all scales are oscillation as damped harmonic oscillators. 
 
-In fig. \ref{fig:theta_sq_k} we see that generally the scaled $l(l+1)\cdot \Theta_l/k$ seems to decrease for larger $l$, and have shapes similar to the damped harmonic oscillator of $\Theta_l$.
+In fig. \ref{fig:theta_sq_k} we see that generally the scaled $l(l+1)\cdot \Theta_l^2/k$ seems to decrease for larger $l$, and have shapes similar to the damped harmonic oscillator of $\Theta_l$.
 
 \subsection{Power Spectrum $C_l$}
 The first power spectrum calculated is with the parameters found in the \textit{Default} row of table \ref{tab:parameters}. 
@@ -158,7 +158,7 @@ Best Fit & $0.065$ & $0.20$ & $8.3\cdot 10^{-5}$ & $0.80$ & $0.7$ \\
 \caption{The power spectrum $C_l l(l+1)/2\pi$ in $\mu K^2$. We see that thoug it has the same shape as the Planck data, the values after the acoustic peak is a bit to low. We can also see that for low $l$s the power spectrum as a way to large value.}\label{fig:Cl_default}
 \end{figure}
 
-The resulting power spectrum can be seen in figure \ref{fig:Cl_default}. Since the top of the acoustic peak in both the simulated data and in the Planck data is normalized to be at $5775 \mu K^2$, they will always agree here. After the peak there is disagreement between the simulated result and the observations, with the simulated $C_l$ having a higher value. Before the peak there is agreement above $l \approx 90$; below this the simulated data shoots upwards, and at $l \approx 2$ there is only mess... This problem is not removed by adjusting the parameters -- have not test by changing $\Omega_k$ and $\Omega_{\Lambda}$, even though they have alot to say for small $l$s --, and will in some instances make it worse. There is most likely some expression somewhere in the code that is wrong, but I've yet to find it.
+The resulting power spectrum can be seen in figure \ref{fig:Cl_default}. Since the top of the first acoustic peak in both the simulated data and in the Planck data is normalized to be at $5775 \mu K^2$, they will always agree here. After the peak there is disagreement between the simulated result and the observations, with the simulated $C_l$ having a higher value. Before the peak there is agreement above $l \approx 90$; below this the simulated data shoots upwards, and at $l \approx 2$ there is only mess... This problem is not removed by adjusting the parameters -- have not test by changing $\Omega_k$ and $\Omega_{\Lambda}$, even though they have alot to say for small $l$s --, and will in some instances make it worse. There is most likely some expression somewhere in the code that is wrong, but I've yet to find it.
 
 \begin{figure*}[!htbp]
 \centering
@@ -212,8 +212,9 @@ Even though the best fit curve correlated well with the data, it was not the sam
 
 But all in all the result was very satisfying, and the way there very educational!
 
-\todo{Write more?}
 
+\subsection{Notes on my own work}
+My code runs mostly with out problems, but there are two things that could have been done better. The first is the speed. To integrate the differential equations for $100$ $k$s and calculate the power spectrum, the code takes about $15-20$ min. This is shorter than for some students, but also much longer than other. I've used many hours, but have yet to find the reason. It is not a big problem, but makes debugging a hassle. The second problem is the sharp increase in the power spectrum at $l\lesssim 70$. I've compared my code to other students who does not have this problem, without being able to find the reason. I think the problem is to be found in the code of earlier milestones, but I have yet to find it, and with the long(ish) run time, this process of debugging take too long.
 
 \begin{thebibliography}{9}
 
