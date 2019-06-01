@@ -70,13 +70,15 @@ contains
 
   
 
-    ! #################################################
+    ! ##################################################
     ! Since my code is slow, this saves the source 
     ! function, so that I can rerun the calculations
     ! of the transfer function, C_l's, etc.
     ! If no file with the given name is found, a new
-    ! one is made using the function from evolution mod
-    ! #################################################
+    ! one is made using the function from evolution mod.
+    ! If the parameter "calc_source" is set to true,
+    ! the calculations will be run anyways!
+    ! ##################################################
 
     filename = "output/milestone4/source_default.bin"
     inquire(file=filename,exist=exist)
@@ -108,7 +110,7 @@ contains
 
     ! #########################################
     ! Fill arrays necessary for the integration
-    ! And the Bessel functions
+    ! and the Bessel functions
     ! #########################################
 
     ! Variable for the Bessel functions
@@ -186,11 +188,11 @@ contains
     write(*,*) "Finding C_l"
     do l = 1, l_num
 
-      write(*,*) "Integrating for l=", l
+      write(*,*) "Integrating for l number", l
 
        ! Task: Compute the transfer function, Theta_l(k)
 
-      !Optimize this be precalculating k(eta0 - eta)!
+      
       do j=1,n_k_full_size
         do i=1,n_x_full_size
           integrand(i) = S(i,j)*splint(z_spline,j_l(:,l),j_l2(:,l),k_hires(j)*(eta0_min_eta(i)))
@@ -219,7 +221,8 @@ contains
         cls(l) = cls(l) + (c*k_hires(j)/H_0)**(n_s - 1.d0)*(Theta(l,j)**2.d0)/k_hires(j)
       end do
       cls(l) = cls(l)*(k_hires(n_k_full_size) - k_hires(1))/(n_k_full_size-1.d0)*ls(l)*(ls(l) + 1.d0)
-      write(*,*) cls(l)
+      ! The final normailzation with 2 pi is done in python
+      write(*,*) "C_l =", cls(l)
 
     end do
 

@@ -44,7 +44,9 @@ module evolution_mod
 
 contains
 
-! NB!!! New routine for 4th milestone only; disregard until then!!!
+! ##############################################
+! Calculates the source function for milestone 4
+! ##############################################
 subroutine get_hires_source_function(k_out, x_out, S)
   implicit none
 
@@ -56,24 +58,14 @@ subroutine get_hires_source_function(k_out, x_out, S)
   real(dp), allocatable, dimension(:,:) :: S_lores
   real(dp), allocatable, dimension(:,:,:,:) :: coeff
 
-  ! Task: Output a pre-computed 2D array (over k and x) for the 
-  !       source function, S(k,x). Remember to set up (and allocate) output 
-  !       k and x arrays too. 
-  !
-  ! Substeps:
-  !   1) First compute the source function over the existing k and x
-  !      grids
-  !   2) Then spline this function with a 2D spline
-  !   3) Finally, resample the source function on a high-resolution uniform
-  !      5000 x 5000 grid and return this, together with corresponding
-  !      high-resolution k and x arrays
+  
 
 
   allocate(S_lores(n_t+n_before,n_k))
   allocate(S(n_x_full_size,n_k_full_size))
   allocate(coeff(4,4,n_t+n_before,n_k))
 
-  
+  ! Calculates the source function over the low res grids
   do i = 1, n_t+n_before
 
     ! Precalcs all x dependent quantities
@@ -128,7 +120,9 @@ subroutine get_hires_source_function(k_out, x_out, S)
 
 end subroutine get_hires_source_function
 
-
+  ! ###############################################
+  ! Functions and soubroutines for milestone 3
+  ! ###############################################
 
   ! Routine for initializing and solving the Boltzmann and Einstein equations
   subroutine initialize_perturbation_eqns
@@ -146,12 +140,12 @@ end subroutine get_hires_source_function
     ! uncomment the ks below!
     ! ####################################################
 
-    !ks(1) = 0.1 * H_0 / c
-    !ks(2) = 8.36 * H_0 / c
-    !ks(3) = 85.9 * H_0 / c
-    !ks(4) = 245.1 * H_0 / c
-    !ks(5) = 636.8 * H_0 / c
-    !ks(6) = 1.d3 * H_0 / c
+    ! ks(1) = 0.1 * H_0 / c
+    ! ks(2) = 8.36 * H_0 / c
+    ! ks(3) = 85.9 * H_0 / c
+    ! ks(4) = 245.1 * H_0 / c
+    ! ks(5) = 636.8 * H_0 / c
+    ! ks(6) = 1.d3 * H_0 / c
     
 
 

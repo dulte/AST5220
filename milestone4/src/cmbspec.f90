@@ -26,7 +26,7 @@ program cmbspec
   ! call write_arrays_to_file
   ! call write_rec_to_file
 
-  call compute_cls(.false.)
+  call compute_cls(.true.)
 
   
 end program cmbspec

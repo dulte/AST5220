@@ -29,6 +29,11 @@ def read_file(name):
 
 
 def get_Plank_data():
+    """
+    The file I downloaded lacked a best fit curve, so I smoothed out the datapoints to
+    make a curve. The values of the errorbars may thus be a bit wrongs, since they were meant for
+    the raw datapoints.
+    """
     filename = "../output/COM_PowerSpect_CMB-TT-full_R3.01.txt"
 
     Dl = []
@@ -64,7 +69,6 @@ def normalize_cl(cl,cl_default):
     cl = cl[1:]
 
     cl_norm = cl/(2.*np.pi)
-    #cl_norm = cl_norm/np.max(cl_default/(2.*np.pi))*5775
     cl_norm = cl_norm/np.max(cl_norm[100:])*5775
     
     return cl_norm[:]
@@ -72,7 +76,7 @@ def normalize_cl(cl,cl_default):
 
 
 def plot_default_againts_other(ls,cl_default,cl_up,cl_down,observed,observed_lim,up_label,down_label,title):
-    #plt.errorbar(ls,observed,yerr=observed_lim,label="Observed")
+    
     
     plt.plot(ls,cl_default,"--",label="Default")
     plt.plot(ls,cl_up,label=up_label)
@@ -115,7 +119,12 @@ if __name__ == "__main__":
     plt.show()
 
 
+    """
+    For plotting with different values of the cosmological parameters.
+    Since the files used for this is not delivered, I've commented out the code.
+    """
 
+    """
     #For changes in n
     cl_n_up = read_file(output_path+"cls_n_up.dat")
     cl_n_down = read_file(output_path+"cls_n_down.dat")
@@ -188,6 +197,9 @@ if __name__ == "__main__":
     plt.ylabel(r"$C_l\cdot l(l+1)/2\pi [\mu K^2]$",fontsize=font_size)
     plt.legend(loc="best",fontsize=legend_font_size)
     plt.show()
+
+
+    """
 
 
     
