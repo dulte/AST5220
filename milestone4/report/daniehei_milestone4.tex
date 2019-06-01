@@ -68,7 +68,7 @@ where $n_s$ is the spectral index. We can now write the power spectrum as
 \begin{equation}\label{eq:Cl}
 C_l = \int^{\infty}_{0}\left(\frac{ck}{H_0}\right)^{n_s - 1} \Theta_l^2(k) \frac{dk}{k}.
 \end{equation}
-We now need to find the transfer function $\Theta_l$. As the choice of name implies, this is perturbation of the $l^{th}$ momentum we found in milestone 3. The problem is the while we calculated these up to $l = 6$, the CMB spectrum is given for $l>1200$. Calculating all these perturbations with the use of the method in milestone 3 is slow, so we need a faster way. Thanks to Zaldarriaga and Seljak we can calculate the momenta in minutes and not hours. They found the so called \textit{line of sight integration} method. This means that instead of doing a multipole expansion of the temperature, then solve the differential equations, we instead solve the equations and then expand. This means that we can write, after some calculation,
+We now need to find the transfer function $\Theta_l$. As the choice of name implies, this is perturbation of the $l^{th}$ momentum we found in milestone 3. The problem is the while we calculated these up to $l = 6$, the CMB spectrum is given for $l$ from $1$ to well over $1200$. Calculating all these perturbations with the use of the method in milestone 3 is slow, so we need a faster way. Thanks to Zaldarriaga and Seljak we can calculate the momenta in minutes and not hours. They found the so called \textit{line of sight integration} method. This means that instead of doing a multipole expansion of the temperature, then solve the differential equations, we instead solve the equations and then expand. This means that we can write, after some calculation,
 
 \begin{equation}\label{eq:Theta}
 \Theta_l(k,x=0) = \int_{-\infty}^{0} \tilde{S}(k,x)j_l(k(\eta_0 - \eta)) dx,
@@ -177,13 +177,13 @@ The resulting power spectrum can be seen in figure \ref{fig:Cl_default}. Since t
 Figure \ref{fig:Cl_changed} we see that happens when each of the parameters are changed one by one. Below I describe what happens when the parameters are increased, but the opposite should happen if they are decreased (as the plots show).
 
 \subsubsection{$n_s$}
-The result is showed in fig. \ref{fig:Cl_n}. Since we have the primordial power spectrum found in eq. \ref{eq:P} there is a strong dependence on $n_s$. If we have a non-unity $n_s$ the power spectrum will depend on scale. With a $n_s<1$ the primordial power spectrum decreases with scale, and the same would be true for $C_l$. This is what we see from fig. \ref{fig:Cl_n}. But in the figure we see that $C_l$ increases if $l< 220$. This is because we have renormalized so that all the first acoustic peaks have the same hight.
+The result is showed in fig. \ref{fig:Cl_n}. Since we have the primordial power spectrum found in eq. \ref{eq:P} there is a strong dependence on $n_s$. If we have a non-unity $n_s$ the primordial power spectrum will depend on scale. With a $n_s<1$ the primordial power spectrum decreases on smaller scales, and the same would be true for $C_l$. This is what we see from fig. \ref{fig:Cl_n}. But in the figure we see that $C_l$ increases if $l< 220$. This is because we have renormalized so that all the first acoustic peaks have the same hight.
 
 \subsubsection{$h$}
-Since many of the equation used in our calculation is dependent on $H$ and thus the dimensionless Hubble parameter $h$, we would expect to see differences when changing it. But from fig. \ref{fig:Cl_h} we see that the changes are very small.
+Since many of the equation used in our calculation is dependent on $H_0$ and thus the dimensionless Hubble parameter $h$, we would expect to see differences when changing it. But from fig. \ref{fig:Cl_h} we see that the changes are very small.
 
 \subsubsection{$\Omega_b$}
-$\Omega_b$, fig. \ref{fig:Cl_b}, determines the amount of baryons in the Universe. With more baryon the gravitation wells the baryon-photon fluid collapses into are deeper, and the compression is larger and decompression smaller. This is why we see that the ratio between the compression/decompression peaks are larger. The first compression peak should also higher, and the ratio between this and the rest of the peaks should be larger, but due to the normalization it stays the same, while the later peaks decrease. More baryons also changes the sound speed(and thus the sound horizon), and the first peak shifts to higher $l$s. This effect can be seen, but is very small.
+$\Omega_b$, fig. \ref{fig:Cl_b}, determines the amount of baryons in the Universe. With more baryon the gravitation wells the baryon-photon fluid collapses into are deeper, and the compressions are larger and decompressions smaller. This is why we see that the ratio between the compression/decompression peaks are larger. The first compression peak should also higher, and the ratio between this and the rest of the peaks should be larger, but due to the normalization it stays the same, while the later peaks decrease. More baryons also changes the sound speed(and thus the sound horizon), and the first peak shifts to higher $l$s. This effect can be seen, but is very small.
 
 \subsubsection{$\Omega_m$}
 $\Omega_m$, fig. \ref{fig:Cl_m}, determines the amount of cold dark matter in the Universe. A larger amount of dark matter would make a deeper gravitational well, which will dampen the acoustic oscillations, so the peaks decay faster. It would also decrease all peaks, but due to the normalization the first compression peak is always the same hight, while the later peaks decreases. Since dark matter makes up the larger part of matter, an increase in dark matter starts matter domination earlier and thus recombination happens later. As we see in fig. \ref{fig:Cl_m} the first peak is towards lower $l$s thus happening	 later.
@@ -193,7 +193,7 @@ $\Omega_r$, fig. \ref{fig:Cl_r}, determines the amount of radiation -- relativis
 
 \subsection{The Best Fit Parameters}
 
-So since we have to decrease the later peaks, the easiest parameters to change is $\Omega_b$, $\Omega_m$ and $n_s$. We are going to increase $\Omega_b$, and decrease $\Omega_m$ and $n_s$. Figure \ref{fig:Cl_bf} shows the result for four different combinations. I chose the purple as the best fit, but a better fit would be somewhere between the light blue and purple. The parameters for this power spectrum is found in table \ref{tab:parameters}. We see that we have a quite good fit, but there is still problems for smaller $l$s. 
+So since we have to decrease the later peaks, the easiest parameters to change is $\Omega_b$, $\Omega_m$ and $n_s$. We are going to vary $\Omega_b$, $\Omega_m$ and $n_s$. Figure \ref{fig:Cl_bf} shows the result for four different combinations. I chose the purple as the best fit, but a better fit would be somewhere between the light blue and purple. The parameters for this power spectrum is found in table \ref{tab:parameters}. We see that we have a quite good fit, but there is still problems for smaller $l$s. 
 
 It is possible to use $\Omega_r$ and $h$ and try to make better fit, but was not done due to time restrictions. 
 
@@ -214,7 +214,9 @@ But all in all the result was very satisfying, and the way there very educationa
 
 
 \subsection{Notes on my own work}
-My code runs mostly with out problems, but there are two things that could have been done better. The first is the speed. To integrate the differential equations for $100$ $k$s and calculate the power spectrum, the code takes about $15-20$ min. This is shorter than for some students, but also much longer than other. I've used many hours, but have yet to find the reason. It is not a big problem, but makes debugging a hassle. The second problem is the sharp increase in the power spectrum at $l\lesssim 70$. I've compared my code to other students who does not have this problem, without being able to find the reason. I think the problem is to be found in the code of earlier milestones, but I have yet to find it, and with the long(ish) run time, this process of debugging take too long.
+My code runs mostly without problems, but there are two things that could have been done better. The first is the speed. To integrate the differential equations for $100$ $k$s and calculate the power spectrum, the code takes about $15-20$ min. This is shorter than for some students, but also much longer than other. I've used many hours, but have yet to find the reason. It is not a big problem, but makes debugging a hassle. The second problem is the sharp increase in the power spectrum at $l\lesssim 70$. I've compared my code to other student's code, who does not have this problem, without being able to find the reason. I think the problem is to be found in the code of earlier milestones, but I have yet to find it, and with the long(ish) run time, this process of debugging take too long.
+
+The code for all the milestone can be found at \url{https://github.com/dulte/AST5220}
 
 \begin{thebibliography}{9}
 
